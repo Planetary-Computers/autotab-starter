@@ -1,4 +1,13 @@
-# Automation
+# Browser Agents
+
+## Quickstart
+
+Want to get going quickly? It takes 5-10 minutes to get all the passwords and dependencies together so everything is set up.
+
+1. Make sure Docker is installed. (1-5 minutes)
+2. Create a file named `.env` with the keys from `.example.env` with values set. (1-2 minutes)
+3. Update config.yaml (only the first section required). (~1 minute)
+4. Setup done! Run `make build-run figma_url=<figma_url> company_name=<company_name>`
 
 ## Setup
 
