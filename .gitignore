@@ -1,0 +1,4 @@
+.env
+google_cookies.json
+.mypy_cache/**
+**/__pycache__/**
