@@ -7,7 +7,7 @@ Want to get going quickly? It takes 5-10 minutes to get all the passwords and de
 1. Make sure Docker is installed. (1-5 minutes)
 2. Create a file named `.env` with the keys from `.example.env` with values set. (1-2 minutes)
 3. Update config.yaml (only the first section required). (~1 minute)
-4. Setup done! Run `make build-run figma_url=<figma_url> company_name=<company_name>`
+4. Setup done! Run `make build-run figma_url=<figma_url> company_name=<company_name>` (replacing the placeholders after the equals sign with the actual values -- make sure to put figma_url and company_name in quotes).
 
 ## Setup
 
