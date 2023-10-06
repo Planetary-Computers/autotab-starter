@@ -26,7 +26,7 @@ The automation can be run either locally (where you can observe the automation i
 
 ### Visible (local only)
 
-After completing the installation steps above, you can run the automation locally by executing `python -m src.mockups_done <figma_url> <company_name>` within your Python virtual environment. Replace `<figma_url>` with the link to the mockups project in Figma and `<company_name>` with the exact name of the company (this is used for folder and file names, and to locate the Notion page).
+After completing the installation steps above, you can run the automation locally by executing `python -m src.mockups_done <figma_url> <company_name>` within your Python virtual environment. Replace `<figma_url>` with the link to the mockups project in Figma and `<company_name>` with the exact name of the company (this is used for folder and file names, and to locate the Notion page). Make sure to put figma_url and company_name in quotes.
 
 Ensure that the browser window controlled by the robot remains open and in focus, as certain applications may not render correctly otherwise, causing the automation to fail.
 
@@ -36,7 +36,11 @@ If you prefer not to have a browser window appear, but also don't want to set up
 
 You will need Docker installed for this.
 
-Then, execute `make build-run figma_url=<figma_url> company_name=<company_name>`, replacing the placeholders after the equals sign with the actual values.
+It is recommended to run it locally once (visible mode, see above) in order to have the google_cookies.json file created locally which can then be copied into the Docker container to avoid facing a 2FA challenge.
+
+Then, execute `make build-run figma_url=<figma_url> company_name=<company_name>`, replacing the placeholders after the equals sign with the actual values. Make sure to put figma_url and company_name in quotes.
+
+You can also run `make build-run-it` to run in headless mode inside the Docker container but interactively, which will allow you to run the script manually, set debug points etc. If you choose this, you will want to run `ENVIRONMENT=container python -m src.mockups_done <figma_url> <company_name>`. Make sure to put figma_url and company_name in quotes.
 
 ### Headless (remote)
 

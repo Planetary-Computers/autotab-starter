@@ -27,6 +27,7 @@ COPY --from=build /opt/chromedriver /opt/
 
 # Upgrade pip and install requirements
 RUN pip3 install --upgrade pip
+WORKDIR /app
 COPY requirements.txt .
 RUN pip3 install -r requirements.txt
 
