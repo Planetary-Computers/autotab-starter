@@ -36,4 +36,6 @@ COPY config.yaml config.yaml
 
 # Set environment variable and command to run
 ENV ENVIRONMENT=container
-CMD ["python", "-u", "-m", "src.mockups_done", "https://www.figma.com/file/Ka4jMr3KtMZ8EKf1sdZYpr/Shaan-Test?type=design&node-id=0-1&mode=design&t=mCBvytBirQjPjoG8-0", "Acmesoft"]
+ARG FIGMA_URL
+ARG COMPANY_NAME
+CMD python -u -m src.mockups_done ${FIGMA_URL} ${COMPANY_NAME}

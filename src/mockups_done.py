@@ -21,7 +21,9 @@ load_dotenv()
 
 
 def main(figma_link: str, company_name: str):
-    print("Running mockups done (ready for review) automation")
+    print(
+        f"Running mockups done (ready for review) automation for figma_link {figma_link} and company_name {company_name}"
+    )
     driver = get_driver()
 
     figma_login(driver)
