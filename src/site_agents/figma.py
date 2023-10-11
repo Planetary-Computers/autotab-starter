@@ -4,7 +4,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
-from src.utils.config import ENVIRONMENT
+from src.utils.config import config
 from src.utils.driver import ExtendedChromeDriver, find_element_with_retry
 
 
@@ -12,7 +12,7 @@ def interactions_to_load(driver: ExtendedChromeDriver):
     # Take a screenshot to focus for loading WebGL
     # (needs access to display buffer)
     # Not needed inside Docker container
-    if ENVIRONMENT != "container":
+    if not config.environment.is_container:
         driver.get_screenshot_as_png()
 
 

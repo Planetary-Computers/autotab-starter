@@ -1,4 +1,6 @@
 .env
+.config.yaml
+.seedo.yaml
 google_cookies.json
 .mypy_cache/**
 **/__pycache__/**

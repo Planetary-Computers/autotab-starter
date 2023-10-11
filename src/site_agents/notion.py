@@ -5,17 +5,17 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
-from src.utils.config import NOTION_WORKSPACE
 from src.utils.driver import ExtendedChromeDriver, find_element_with_retry
 
 
 def append_image_to_notion_page(
     driver: ExtendedChromeDriver,
+    notion_workspace: str,
     page_title: str,
     notion_page_id: str,
     image_filepath: Path,
 ):
-    notion_url = f"https://www.notion.so/{NOTION_WORKSPACE}/{page_title}-{notion_page_id.replace('-', '')}"
+    notion_url = f"https://www.notion.so/{notion_workspace}/{page_title}-{notion_page_id.replace('-', '')}"
     driver.get(notion_url)
     time.sleep(5)
 

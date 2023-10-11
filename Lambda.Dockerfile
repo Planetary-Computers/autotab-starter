@@ -24,7 +24,7 @@ COPY requirements.txt .
 RUN pip3 install -r requirements.txt
 
 COPY src src
-COPY config.yaml config.yaml
+COPY .seedo.yaml .seedo.yaml
 
 ENV ENVIRONMENT=container
 # TODO: Add handler

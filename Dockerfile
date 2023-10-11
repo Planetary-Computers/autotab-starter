@@ -33,7 +33,7 @@ RUN pip3 install -r requirements.txt
 
 # Copy source code and configuration file
 COPY src src
-COPY config.yaml config.yaml
+COPY .seedo.yaml .seedo.yaml
 
 # Set environment variable and command to run
 ENV ENVIRONMENT=container

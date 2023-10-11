@@ -1,34 +1,55 @@
 import os
-
 import yaml
-from dotenv import load_dotenv
 
-load_dotenv()
+from typing import Optional, Dict, List
+from pydantic import BaseModel
+from enum import Enum
 
+from src.utils.env import ENVIRONMENT
 
-# Unfortunately Docker doesn't support env vars with quotes, so we have to do this
-# https://github.com/docker/cli/issues/3630
-def get_env_escape_quotes(env_var):
-    raw_value = os.getenv(env_var)
-    if (raw_value.startswith('"') and raw_value.endswith('"')) or (
-        raw_value.startswith("'") and raw_value.endswith("'")
-    ):
-        return raw_value[1:-1]
-    return raw_value
+class Environment(str, Enum):
+    LOCAL = 'local'
+    CONTAINER = 'container'
+    
+    @property
+    def is_container(self) -> bool:
+        return self == Environment.CONTAINER
 
+class SiteCredentials(BaseModel):
+    password: Optional[str] = None
+    email: Optional[str] = None
+    login_with_google: Optional[bool] = False
+    
+class Config(BaseModel):
+    default_email: str
+    credentials: Dict[str, SiteCredentials]
+    environment: Environment = Environment.LOCAL
+    
+    @classmethod
+    def load_from_yaml(cls, path: str):
+        with open(path, "r") as config_file:
+            config = yaml.safe_load(config_file)
+            _credentials = {}
+            for creds in config.get("credentials", []):
+                site_creds = SiteCredentials(**creds)
+                for domain in creds['domains']:
+                    _credentials[domain] = site_creds
+                
+            environment = config.get("environment", Environment.LOCAL)
+            if ENVIRONMENT:
+                environment = ENVIRONMENT
+                
+            return cls(
+                environment=environment,
+                default_email = config["default_email_address"],
+                credentials = _credentials,
+            )
+    
+    def get_site_credentials(self, url: str):
+        credentials = self.credentials[url].copy()
+        if not credentials.email:
+            credentials.email = self.default_email
+        return credentials
+        
 
-EMAIL = get_env_escape_quotes("EMAIL")
-FIGMA_PASSWORD = get_env_escape_quotes("FIGMA_PASSWORD")
-GOOGLE_PASSWORD = get_env_escape_quotes("GOOGLE_PASSWORD")
-NOTION_API_KEY = get_env_escape_quotes("NOTION_API_KEY")
-NOTION_PASSWORD = get_env_escape_quotes("NOTION_PASSWORD")
-
-ENVIRONMENT = os.environ.get("ENVIRONMENT")
-
-with open("config.yaml", "r") as config_file:
-    config = yaml.safe_load(config_file)
-
-NOTION_DB_ID = config["NOTION_DB_ID"]
-CHROME_BINARY_LOCATION = config["CHROME_BINARY_LOCATION"]
-GDRIVE_PARENT_FOLDER_URL = config["GDRIVE_PARENT_FOLDER_URL"]
-NOTION_WORKSPACE = config["NOTION_WORKSPACE"]
+config = Config.load_from_yaml('.seedo.yaml')

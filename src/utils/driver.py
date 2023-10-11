@@ -8,7 +8,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
 
-from src.utils.config import CHROME_BINARY_LOCATION, ENVIRONMENT
+from src.utils.config import config
 
 
 def get_driver_from_element(element: WebElement) -> WebDriver:
@@ -30,7 +30,7 @@ def find_element_with_retry(
         driver = get_driver_from_element(root_element)
         screenshot_path = (
             "/var/task/screenshot.png"
-            if ENVIRONMENT == "container"
+            if config.environment.is_container
             else str(Path.home() / "Desktop" / "screenshot.png")
         )
         driver.get_screenshot_as_file(screenshot_path)
@@ -63,11 +63,11 @@ def get_driver():
     options.add_argument("--enable-clipboard-read-write")
 
     prefs = {"profile.default_content_setting_values.cookies": 1}
-    if ENVIRONMENT == "container":
+    if config.environment.is_container:
         prefs = {**prefs, "download.default_directory": "/tmp"}
     options.add_experimental_option("prefs", prefs)
 
-    if ENVIRONMENT == "container":
+    if config.environment.is_container:
         # Display needed to render WebGL in headless mode
         display = Display(visible=0, size=(1920, 1080))
         display.start()
@@ -88,7 +88,7 @@ def get_driver():
         options.add_argument("--remote-debugging-port=9222")
         driver = ExtendedChromeDriver("/opt/chromedriver", options=options)
     else:
-        options.binary_location = CHROME_BINARY_LOCATION
+        options.binary_location = config.chrome_binary_filepath
 
         driver = ExtendedChromeDriver(options=options)
 

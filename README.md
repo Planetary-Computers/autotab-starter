@@ -6,14 +6,14 @@ Want to get going quickly? It takes 5-10 minutes to get all the passwords and de
 
 1. Make sure Docker is installed. (1-5 minutes)
 2. Create a file named `.env` with the keys from `.example.env` with values set. (1-2 minutes)
-3. Update config.yaml (only the first section required). (~1 minute)
+3. Update .config.yaml (only the first section required). (~1 minute)
 4. Setup done! Run `make build-run figma_url=<figma_url> company_name=<company_name>` (replacing the placeholders after the equals sign with the actual values -- make sure to put figma_url and company_name in quotes).
 
 ## Setup
 
 ### Installation
 
-This scraper is designed to work with Chrome. If you wish to use a different browser, you will need to modify the script accordingly. The default location for Chrome is assumed to be `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome`. If your Chrome installation is located elsewhere, please update `CHROME_BINARY_LOCATION` in the config.yaml file.
+This scraper is designed to work with Chrome. If you wish to use a different browser, you will need to modify the script accordingly. The default location for Chrome is assumed to be `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome`. If your Chrome installation is located elsewhere, please update `CHROME_BINARY_LOCATION` in the .config.yaml file.
 
 In addition to Chrome, Selenium requires `chromedriver` to operate. On a Mac, you can easily install chromedriver using homebrew: `brew install chromedriver`.
 
@@ -27,7 +27,7 @@ The first time the scraper logs into Google, it may require 2FA depending on you
 
 Setting up Notion requires a few more steps. You need to create a Notion integration, which can be done by following these steps: [Notion's Create a Integration Guide](https://developers.notion.com/docs/create-a-notion-integration). Ensure that the integration has access to the relevant page in Notion.
 
-Lastly, update `config.yaml` with the values that match your setup.
+Lastly, update `.config.yaml` with the values that match your setup.
 
 ## Running the automation
 

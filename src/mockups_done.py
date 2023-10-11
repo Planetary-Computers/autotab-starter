@@ -13,11 +13,18 @@ from src.site_agents.figma import download_figma_exports, get_sharing_link_for_f
 from src.site_agents.google import upload_files_to_folder
 from src.site_agents.notion import append_image_to_notion_page
 from src.utils.api import make_notion_request
-from src.utils.config import ENVIRONMENT, GDRIVE_PARENT_FOLDER_URL, NOTION_DB_ID
+from src.utils.config import config
+from src.utils.env import get_env_escape_quotes
 from src.utils.driver import get_driver
-from src.utils.login import figma_login, google_login, notion_login
+from src.utils.auth import login, google_login
 
 load_dotenv()
+
+NOTION_DB_ID = get_env_escape_quotes("NOTION_DB_ID")
+CHROME_BINARY_LOCATION = get_env_escape_quotes("CHROME_BINARY_LOCATION")
+GDRIVE_PARENT_FOLDER_URL = get_env_escape_quotes("GDRIVE_PARENT_FOLDER_URL")
+NOTION_WORKSPACE = get_env_escape_quotes("NOTION_WORKSPACE")
+NOTION_API_KEY = get_env_escape_quotes("NOTION_API_KEY")
 
 
 def main(figma_link: str, company_name: str):
@@ -26,7 +33,7 @@ def main(figma_link: str, company_name: str):
     )
     driver = get_driver()
 
-    figma_login(driver)
+    login(driver, figma_link)
 
     figma_sharing_link = get_sharing_link_for_flow(figma_link, driver)
 
@@ -71,7 +78,7 @@ def main(figma_link: str, company_name: str):
 
     # Unzip the download and rename the files
     downloads_dir = (
-        "/tmp" if ENVIRONMENT == "container" else os.path.expanduser("~/Downloads")
+        "/tmp" if config.environment.is_container else os.path.expanduser("~/Downloads")
     )
     files = os.listdir(downloads_dir)
     zip_files = [
@@ -129,6 +136,7 @@ def main(figma_link: str, company_name: str):
     }
     response = make_notion_request(
         f"https://api.notion.com/v1/databases/{NOTION_DB_ID}/query",
+        NOTION_API_KEY,
         method="POST",
         data=data,
     )
@@ -146,14 +154,14 @@ def main(figma_link: str, company_name: str):
             "Status": {"type": "status", "status": {"name": "Ready for feedback"}},
         }
     }
-    response = make_notion_request(page_url, method="PATCH", data=update_data)
+    response = make_notion_request(page_url, NOTION_API_KEY, method="PATCH", data=update_data)
 
     # Add 1x mockup to Notion
     driver = get_driver()
-    notion_login(driver, use_google=True)
+    login(driver, "notion.so")
 
     image_filepath = [f for f in full_filepaths if "2x" not in f.name][0]
-    append_image_to_notion_page(driver, company_name, notion_page_id, image_filepath)
+    append_image_to_notion_page(driver, NOTION_WORKSPACE, company_name, notion_page_id, image_filepath)
 
     driver.close()
 
@@ -173,5 +181,6 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
+    
 
-    main(args.FigmaLink, args.CompanyName)
+    # main(args.FigmaLink, args.CompanyName)

@@ -1,0 +1,10 @@
+default_email_address: you@gmail.com
+chrome_binary_filepath: /usr/local/bin/chromedriver 
+credentials:
+  - domains:
+    - google.com
+    password: ...
+  - domains:
+    - notion.so
+    - notion.com
+    login_with_google: true

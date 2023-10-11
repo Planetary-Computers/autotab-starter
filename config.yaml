@@ -1,6 +1,0 @@
-NOTION_DB_ID: 8abbecca9aaa4f1e905324edadbcf6ca
-GDRIVE_PARENT_FOLDER_URL: https://drive.google.com/drive/folders/1veezdX9Yvu5abdDx-8jtWjPpEqzrm6xV
-NOTION_WORKSPACE: planetary-computers
-
-# Only relevant for running locally (visible mode)
-CHROME_BINARY_LOCATION: /Applications/Google Chrome.app/Contents/MacOS/Google Chrome # Used for local runs only

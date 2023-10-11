@@ -5,29 +5,8 @@ import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
-from src.utils.config import (
-    EMAIL,
-    ENVIRONMENT,
-    FIGMA_PASSWORD,
-    GOOGLE_PASSWORD,
-    NOTION_PASSWORD,
-)
-
-
-def figma_login(driver):
-    print("Logging in to Figma")
-    driver.get("https://www.figma.com/login")
-    time.sleep(2)
-
-    email_input = driver.find_element(By.NAME, "email")
-    email_input.send_keys(EMAIL)
-    password_input = driver.find_element(By.NAME, "password")
-    password_input.send_keys(FIGMA_PASSWORD)
-    password_input.send_keys(Keys.ENTER)
-
-    time.sleep(3)
-    print("Successfully logged in to Figma")
-
+from src.utils.config import config, SiteCredentials
+from src.utils.url_utils import clean_url
 
 def google_login(driver):
     print("Logging in to Google")
@@ -47,13 +26,14 @@ def google_login(driver):
             time.sleep(1)
             driver.refresh()
             time.sleep(2)
-
+    
+    credentials = config.get_site_credentials("google.com")
     email_input = driver.find_element(By.CSS_SELECTOR, "[type='email']")
-    email_input.send_keys(EMAIL)
+    email_input.send_keys(credentials.email)
     email_input.send_keys(Keys.ENTER)
     time.sleep(3)
     password_input = driver.find_element(By.CSS_SELECTOR, "[type='password']")
-    password_input.send_keys(GOOGLE_PASSWORD)
+    password_input.send_keys(credentials.password)
     password_input.send_keys(Keys.ENTER)
     time.sleep(3)
     print("Successfully logged in to Google")
@@ -63,7 +43,7 @@ def google_login(driver):
         # Probably wanted to have us solve a captcha, or 2FA or confirm recovery details
         print("Need 2FA help to log in to Google")
         # TODO: Show screenshot it to the user
-        if ENVIRONMENT == "container":
+        if config.environment.is_container:
             driver.get_screenshot_as_file("/var/task/2fa.png")
             time.sleep(30)  # Give time to solve 2FA
         else:
@@ -87,46 +67,59 @@ def google_login(driver):
 
         # Log back in
         login_button = driver.find_element(
-            By.CSS_SELECTOR, f"[data-identifier='{EMAIL}']"
+            By.CSS_SELECTOR, f"[data-identifier='{credentials.email}']"
         )
         login_button.click()
         time.sleep(1)
         password_input = driver.find_element(By.CSS_SELECTOR, "[type='password']")
-        password_input.send_keys(GOOGLE_PASSWORD)
+        password_input.send_keys(credentials.password)
         password_input.send_keys(Keys.ENTER)
 
         time.sleep(3)
         print("Successfully copied Google cookies for the future")
 
 
-def notion_login(driver, use_google=False):
-    print(f"Logging in to Notion {'with Google' if use_google else 'with password'}")
-    # Google login is better if you run this frequently
-    if use_google:
-        google_login(driver)
+def login(driver, url: str):
+    url = clean_url(url)
+    
+    credentials = config.get_site_credentials(url)
+    if credentials.login_with_google:
+        _login_with_google(driver, url)
+    else:
+        _login(driver, url, credentials=credentials)
+        
 
-    driver.get("https://www.notion.so/login")
+def _login(driver, url: str, credentials: SiteCredentials):
+    print(f"Logging in to {url}")
+    driver.get(url)
+    time.sleep(2)
+    email_input = driver.find_element(By.NAME, "email")
+    email_input.send_keys(credentials.email)
+    password_input = driver.find_element(By.NAME, "password")
+    password_input.send_keys(credentials.password)
+    password_input.send_keys(Keys.ENTER)
+
+    time.sleep(3)
+    print(f"Successfully logged in to {url}")
+    
+def _login_with_google(driver, url: str):
+    print(f"Logging in to {url} with Google")
+    
+    google_login(driver)
+
+    driver.get(url)
     time.sleep(2)
 
-    if use_google:
-        main_window = driver.current_window_handle
-        driver.find_element(
-            By.XPATH, "//*[contains(text(), 'Continue with Google')]"
-        ).click()
+    main_window = driver.current_window_handle
+    driver.find_element(
+        By.XPATH, "//*[contains(text(), 'Continue with Google')]"
+    ).click()
 
-        driver.switch_to.window(driver.window_handles[-1])
-        driver.find_element(By.XPATH, f"//*[contains(text(), '{EMAIL}')]").click()
+    driver.switch_to.window(driver.window_handles[-1])
+    email = config.get_site_credentials("google.com").email
+    driver.find_element(By.XPATH, f"//*[contains(text(), '{email}')]").click()
 
-        driver.switch_to.window(main_window)
-    else:
-        email_input = driver.find_element(By.CSS_SELECTOR, "[type='email']")
-        email_input.send_keys(EMAIL)
-        email_input.send_keys(Keys.ENTER)
-        time.sleep(1)
-
-        password_input = driver.find_element(By.CSS_SELECTOR, "[type='password']")
-        password_input.send_keys(NOTION_PASSWORD)
-        password_input.send_keys(Keys.ENTER)
+    driver.switch_to.window(main_window)
 
     time.sleep(5)
-    print("Successfully logged in to Notion")
+    print(f"Successfully logged in to {url}")
