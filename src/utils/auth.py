@@ -5,8 +5,9 @@ import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
-from src.utils.config import config, SiteCredentials
-from src.utils.url_utils import clean_url
+from src.utils.config import SiteCredentials, config
+from src.utils.url_utils import extract_domain_from_url
+
 
 def google_login(driver):
     print("Logging in to Google")
@@ -26,7 +27,7 @@ def google_login(driver):
             time.sleep(1)
             driver.refresh()
             time.sleep(2)
-    
+
     credentials = config.get_site_credentials("google.com")
     email_input = driver.find_element(By.CSS_SELECTOR, "[type='email']")
     email_input.send_keys(credentials.email)
@@ -80,14 +81,15 @@ def google_login(driver):
 
 
 def login(driver, url: str):
-    url = clean_url(url)
-    
-    credentials = config.get_site_credentials(url)
+    domain = extract_domain_from_url(url)
+
+    credentials = config.get_site_credentials(domain)
+    login_url = credentials.login_url
     if credentials.login_with_google:
-        _login_with_google(driver, url)
+        _login_with_google(driver, login_url)
     else:
-        _login(driver, url, credentials=credentials)
-        
+        _login(driver, login_url, credentials=credentials)
+
 
 def _login(driver, url: str, credentials: SiteCredentials):
     print(f"Logging in to {url}")
@@ -101,10 +103,11 @@ def _login(driver, url: str, credentials: SiteCredentials):
 
     time.sleep(3)
     print(f"Successfully logged in to {url}")
-    
+
+
 def _login_with_google(driver, url: str):
     print(f"Logging in to {url} with Google")
-    
+
     google_login(driver)
 
     driver.get(url)

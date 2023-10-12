@@ -1,7 +1,9 @@
 import os
+
 from dotenv import load_dotenv
 
 load_dotenv()
+
 
 def get_env_escape_quotes(env_var):
     raw_value = os.getenv(env_var)
@@ -12,6 +14,7 @@ def get_env_escape_quotes(env_var):
     ):
         return raw_value[1:-1]
     return raw_value
+
 
 ENVIRONMENT = get_env_escape_quotes("SEEDO_ENVIRONMENT")
 CHROME_BINARY_FILEPATH = get_env_escape_quotes("SEEDO_CHROME_BINARY_FILEPATH")

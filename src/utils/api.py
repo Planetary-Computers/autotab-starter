@@ -1,5 +1,6 @@
 import requests
 
+
 def make_notion_request(url, api_key, method="GET", data=None):
     headers = {
         "Authorization": "Bearer " + api_key,

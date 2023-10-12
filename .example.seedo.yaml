@@ -1,0 +1,22 @@
+default_email_address: you@gmail.com
+chrome_binary_filepath: /usr/local/bin/chromedriver
+
+environment: local # optional, set to "container" to run headless in a container
+
+credentials:
+  - name: Google
+    login_url: https://accounts.google.com/v3/signin # optional, defaults to https://{domain}/login
+    domains:
+    - google.com
+    password: ...
+
+  - name: Notion
+    domains:
+    - notion.so
+    - notion.com
+    login_with_google: true
+
+  - name: Figma
+    domains:
+    - figma.com
+    password: ...

@@ -6,19 +6,16 @@ import time
 import zipfile
 from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 
-from dotenv import load_dotenv
 from selenium.webdriver.common.by import By
 
 from src.site_agents.figma import download_figma_exports, get_sharing_link_for_flow
 from src.site_agents.google import upload_files_to_folder
 from src.site_agents.notion import append_image_to_notion_page
 from src.utils.api import make_notion_request
+from src.utils.auth import google_login, login
 from src.utils.config import config
-from src.utils.env import get_env_escape_quotes
 from src.utils.driver import get_driver
-from src.utils.auth import login, google_login
-
-load_dotenv()
+from src.utils.env import get_env_escape_quotes
 
 NOTION_DB_ID = get_env_escape_quotes("NOTION_DB_ID")
 CHROME_BINARY_LOCATION = get_env_escape_quotes("CHROME_BINARY_LOCATION")
@@ -154,14 +151,18 @@ def main(figma_link: str, company_name: str):
             "Status": {"type": "status", "status": {"name": "Ready for feedback"}},
         }
     }
-    response = make_notion_request(page_url, NOTION_API_KEY, method="PATCH", data=update_data)
+    response = make_notion_request(
+        page_url, NOTION_API_KEY, method="PATCH", data=update_data
+    )
 
     # Add 1x mockup to Notion
     driver = get_driver()
     login(driver, "notion.so")
 
     image_filepath = [f for f in full_filepaths if "2x" not in f.name][0]
-    append_image_to_notion_page(driver, NOTION_WORKSPACE, company_name, notion_page_id, image_filepath)
+    append_image_to_notion_page(
+        driver, NOTION_WORKSPACE, company_name, notion_page_id, image_filepath
+    )
 
     driver.close()
 
@@ -181,6 +182,5 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
-    
 
-    # main(args.FigmaLink, args.CompanyName)
+    main(args.FigmaLink, args.CompanyName)

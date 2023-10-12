@@ -1,10 +1,12 @@
 from urllib.parse import urlparse
 
-def clean_url(url: str):
+
+def extract_domain_from_url(url: str):
+    # url = http://username:password@hostname:port/path?arg=value#anchor
     parsed_url = urlparse(url)
-    domain = parsed_url.netloc or parsed_url.path
-    domain = domain.split(":")[0]
-    domain = domain.split("@")[-1]
-    domain = domain.split(".")
-    domain = ".".join(domain[-2:])
-    return domain
+    hostname = parsed_url.hostname
+    if hostname is None:
+        raise ValueError(f"Could not extract hostname from url {url}")
+    if hostname.startswith("www."):
+        hostname = hostname[4:]
+    return hostname
