@@ -17,4 +17,3 @@ def get_env_escape_quotes(env_var):
 
 
 ENVIRONMENT = get_env_escape_quotes("SEEDO_ENVIRONMENT")
-CHROME_BINARY_FILEPATH = get_env_escape_quotes("SEEDO_CHROME_BINARY_FILEPATH")

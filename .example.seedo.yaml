@@ -1,7 +1,7 @@
 default_email_address: you@gmail.com
-chrome_binary_filepath: /usr/local/bin/chromedriver
 
 environment: local # optional, set to "container" to run headless in a container
+chrome_binary_filepath: /usr/local/bin/chromedriver # required if environment is "local"
 
 credentials:
   - name: Google

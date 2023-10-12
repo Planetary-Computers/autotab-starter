@@ -44,6 +44,7 @@ class Config(BaseModel):
 
             environment = config.get("environment", Environment.LOCAL)
             if ENVIRONMENT:
+                # .env overrides yaml config
                 environment = ENVIRONMENT
 
             return cls(
