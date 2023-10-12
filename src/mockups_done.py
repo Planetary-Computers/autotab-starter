@@ -157,7 +157,7 @@ def main(figma_link: str, company_name: str):
 
     # Add 1x mockup to Notion
     driver = get_driver()
-    login(driver, "notion.so")
+    login(driver, "https://www.notion.so/login")
 
     image_filepath = [f for f in full_filepaths if "2x" not in f.name][0]
     append_image_to_notion_page(

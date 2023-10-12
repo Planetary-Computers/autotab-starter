@@ -4,7 +4,7 @@ from typing import Dict, Optional
 import yaml
 from pydantic import BaseModel
 
-from src.utils.env import ENVIRONMENT
+from src.utils.env import SEEDO_ENVIRONMENT
 
 
 class Environment(str, Enum):
@@ -28,7 +28,7 @@ class Config(BaseModel):
     default_email: str
     credentials: Dict[str, SiteCredentials]
     environment: Environment = Environment.LOCAL
-    chrome_binary_filepath: Optional[str] = None
+    chrome_binary_location: Optional[str] = None
 
     @classmethod
     def load_from_yaml(cls, path: str):
@@ -43,15 +43,15 @@ class Config(BaseModel):
                     _credentials[domain] = site_creds
 
             environment = config.get("environment", Environment.LOCAL)
-            if ENVIRONMENT:
+            if SEEDO_ENVIRONMENT:
                 # .env overrides yaml config
-                environment = ENVIRONMENT
+                environment = SEEDO_ENVIRONMENT
 
             return cls(
                 default_email=config["default_email_address"],
                 credentials=_credentials,
                 environment=environment,
-                chrome_binary_filepath=config.get("chrome_binary_filepath"),
+                chrome_binary_location=config.get("chrome_binary_location"),
             )
 
     def get_site_credentials(self, domain: str):

@@ -88,7 +88,7 @@ def get_driver():
         options.add_argument("--remote-debugging-port=9222")
         driver = ExtendedChromeDriver("/opt/chromedriver", options=options)
     else:
-        options.binary_location = config.chrome_binary_filepath
+        options.binary_location = config.chrome_binary_location
 
         driver = ExtendedChromeDriver(options=options)
 

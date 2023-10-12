@@ -36,7 +36,7 @@ COPY src src
 COPY .seedo.yaml .seedo.yaml
 
 # Set environment variable and command to run
-ENV ENVIRONMENT=container
+ENV SEEDO_ENVIRONMENT=container
 ARG FIGMA_URL
 ARG COMPANY_NAME
 CMD python -u -m src.mockups_done ${FIGMA_URL} ${COMPANY_NAME}
