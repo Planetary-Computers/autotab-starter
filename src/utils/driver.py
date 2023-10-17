@@ -1,6 +1,8 @@
+import time
 from pathlib import Path
 from tempfile import mkdtemp
 from typing import Optional
+import pyautogui
 
 from pyvirtualdisplay import Display
 from selenium import webdriver
@@ -9,35 +11,10 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
 
 from src.utils.config import config
+from src.utils.open_plugin import open_plugin
 
 
-def get_driver_from_element(element: WebElement) -> WebDriver:
-    parent = element.parent
-    while not isinstance(parent, WebDriver):
-        parent = parent.parent
-    return parent
-
-
-def find_element_with_retry(
-    root_element: WebElement, by=By.ID, value: Optional[str] = None
-):
-    try:
-        return root_element.find_element(by, value)
-    except Exception as e:
-        print(e)
-        print(root_element.get_attribute("outerHTML"))
-        print(root_element.get_attribute("innerHTML"))
-        driver = get_driver_from_element(root_element)
-        screenshot_path = (
-            "/var/task/screenshot.png"
-            if config.environment.is_container
-            else str(Path.home() / "Desktop" / "screenshot.png")
-        )
-        driver.get_screenshot_as_file(screenshot_path)
-        breakpoint()
-
-
-class ExtendedChromeDriver(webdriver.Chrome):
+class AutotabChromeDriver(webdriver.Chrome):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -52,7 +29,7 @@ class ExtendedChromeDriver(webdriver.Chrome):
             raise e
 
 
-def get_driver():
+def get_driver(autotab_ext_path: str = './src/extension/autotab.crx', record_mode: bool = False):
     options = webdriver.ChromeOptions()
     options.add_argument("--no-sandbox")  # Necessary for running
     options.add_argument(
@@ -66,6 +43,17 @@ def get_driver():
     if config.environment.is_container:
         prefs = {**prefs, "download.default_directory": "/tmp"}
     options.add_experimental_option("prefs", prefs)
+    
+    if autotab_ext_path:
+        # options.add_extension(autotab_ext_path)
+        
+        # chrome_options.add_argument("user-data-dir=C:/Users/charl/OneDrive/python/userprofile/profilename"
+        unpacked_extension_path = '/Users/alexirobbins/Sites/code/autotab/extension/build'
+        options.add_argument('--load-extension={}'.format(unpacked_extension_path))
+        
+        # options.add_argument('load-extension=' + 'autotab')
+        # options.add_argument('load-extension=' + autotab_ext_path)
+        # driver.get("chrome-extension://"+autotab_ext_path+"/")
 
     if config.environment.is_container:
         # Display needed to render WebGL in headless mode
@@ -81,15 +69,26 @@ def get_driver():
         options.add_argument("--single-process")
         options.add_argument("--disable-dev-shm-usage")
         options.add_argument("--disable-dev-tools")
+        options.add_argument("--allow-running-insecure-content")
+        options.add_argument("--disable-web-security")
         options.add_argument("--no-zygote")
         options.add_argument(f"--user-data-dir={mkdtemp()}")
         options.add_argument(f"--data-path={mkdtemp()}")
         options.add_argument(f"--disk-cache-dir={mkdtemp()}")
         options.add_argument("--remote-debugging-port=9222")
-        driver = ExtendedChromeDriver("/opt/chromedriver", options=options)
+        driver = AutotabChromeDriver("/opt/chromedriver", options=options)
     else:
+        options.add_argument("--allow-running-insecure-content")
+        options.add_argument("--disable-web-security")
+        options.add_argument(f"--user-data-dir={mkdtemp()}")
+        # options.add_argument("--incognito")
         options.binary_location = config.chrome_binary_location
 
-        driver = ExtendedChromeDriver(options=options)
-
+        driver = AutotabChromeDriver(options=options)
+    # EXTENSION_ID = 'opnpiohbfdicpkcokpijkhmijlepkkkl'
+    # url = 'chrome-extension://{EXTENSION_ID}/src/sidepanel/index.html'.format(EXTENSION_ID=EXTENSION_ID)
+    # driver.get(url)
+    if record_mode:
+        open_plugin(driver)
+    
     return driver

@@ -25,6 +25,8 @@ class SiteCredentials(BaseModel):
 
 
 class Config(BaseModel):
+    autotab_email: str
+    autotab_password: str
     default_email: str
     credentials: Dict[str, SiteCredentials]
     environment: Environment = Environment.LOCAL
@@ -48,17 +50,23 @@ class Config(BaseModel):
                 environment = AUTOTAB_ENVIRONMENT
 
             return cls(
+                autotab_email=config["autotab_email_address"],
+                autotab_password=config["autotab_password"],
                 default_email=config["default_email_address"],
                 credentials=_credentials,
                 environment=environment,
                 chrome_binary_location=config.get("chrome_binary_location"),
             )
 
-    def get_site_credentials(self, domain: str):
+    def get_site_credentials(self, domain: str) -> SiteCredentials:
         credentials = self.credentials[domain].model_copy()
         if not credentials.email:
             credentials.email = self.default_email
         return credentials
+    
+    @property
+    def autotab_credentials(self) -> SiteCredentials:
+        return SiteCredentials(email=self.autotab_email, password=self.autotab_password)
 
 
 config = Config.load_from_yaml(".autotab.yaml")

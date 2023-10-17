@@ -9,14 +9,16 @@ from src.utils.config import SiteCredentials, config
 from src.utils.url_utils import extract_domain_from_url
 
 
-def google_login(driver):
+def google_login(driver, credentials: SiteCredentials = None, navigate: bool = True):
     print("Logging in to Google")
-    driver.get(
-        "https://accounts.google.com/v3/signin/identifier?continue=http%3A%2F%2Fdrive.google.com%2F%3Futm_source%3Den&ifkv=AYZoVhcdl5uTLa1Efje9aLyU2pr3EpjwRt4wwtepr_Lk7oaSb4MO0vq3gSYUOxyw2gtD6LYxTHfeug&ltmpl=drive&passive=true&service=wise&usp=gtd&utm_campaign=web&utm_content=gotodrive&utm_medium=button&flowName=GlifWebSignIn&flowEntry=ServiceLogin&dsh=S-1861333869%3A1696520938684040&theme=glif"
-    )
-    time.sleep(2)
+    if navigate:
+        driver.get(
+            "https://accounts.google.com/v3/signin/identifier?continue=http%3A%2F%2Fdrive.google.com%2F%3Futm_source%3Den&ifkv=AYZoVhcdl5uTLa1Efje9aLyU2pr3EpjwRt4wwtepr_Lk7oaSb4MO0vq3gSYUOxyw2gtD6LYxTHfeug&ltmpl=drive&passive=true&service=wise&usp=gtd&utm_campaign=web&utm_content=gotodrive&utm_medium=button&flowName=GlifWebSignIn&flowEntry=ServiceLogin&dsh=S-1861333869%3A1696520938684040&theme=glif"
+        )
+        time.sleep(1)
 
     if os.path.exists("google_cookies.json"):
+        print('cookies exist, doing loading')
         with open("google_cookies.json", "r") as f:
             google_cookies = json.load(f)
             for cookie in google_cookies:
@@ -27,16 +29,20 @@ def google_login(driver):
             time.sleep(1)
             driver.refresh()
             time.sleep(2)
-
-    credentials = config.get_site_credentials("google.com")
+    
+    if not credentials:
+        credentials = config.get_site_credentials("google.com")
+    print('credentials: {}'.format(credentials))
     email_input = driver.find_element(By.CSS_SELECTOR, "[type='email']")
     email_input.send_keys(credentials.email)
     email_input.send_keys(Keys.ENTER)
-    time.sleep(3)
+    time.sleep(2)
+    
+    
     password_input = driver.find_element(By.CSS_SELECTOR, "[type='password']")
     password_input.send_keys(credentials.password)
     password_input.send_keys(Keys.ENTER)
-    time.sleep(3)
+    time.sleep(1.5)
     print("Successfully logged in to Google")
 
     cookies = driver.get_cookies()
