@@ -24,7 +24,7 @@ COPY requirements.txt .
 RUN pip3 install -r requirements.txt
 
 COPY src src
-COPY .seedo.yaml .seedo.yaml
+COPY .autotab.yaml .autotab.yaml
 
-ENV SEEDO_ENVIRONMENT=container
+ENV AUTOTAB_ENVIRONMENT=container
 # TODO: Add handler

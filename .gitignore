@@ -1,6 +1,6 @@
 .env
 .config.yaml
-.seedo.yaml
+.autotab.yaml
 google_cookies.json
 .mypy_cache/**
 **/__pycache__/**

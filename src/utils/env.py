@@ -16,4 +16,4 @@ def get_env_escape_quotes(env_var):
     return raw_value
 
 
-SEEDO_ENVIRONMENT = get_env_escape_quotes("SEEDO_ENVIRONMENT")
+AUTOTAB_ENVIRONMENT = get_env_escape_quotes("AUTOTAB_ENVIRONMENT")

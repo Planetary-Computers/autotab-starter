@@ -4,7 +4,7 @@ from typing import Dict, Optional
 import yaml
 from pydantic import BaseModel
 
-from src.utils.env import SEEDO_ENVIRONMENT
+from src.utils.env import AUTOTAB_ENVIRONMENT
 
 
 class Environment(str, Enum):
@@ -43,9 +43,9 @@ class Config(BaseModel):
                     _credentials[domain] = site_creds
 
             environment = config.get("environment", Environment.LOCAL)
-            if SEEDO_ENVIRONMENT:
+            if AUTOTAB_ENVIRONMENT:
                 # .env overrides yaml config
-                environment = SEEDO_ENVIRONMENT
+                environment = AUTOTAB_ENVIRONMENT
 
             return cls(
                 default_email=config["default_email_address"],
@@ -61,4 +61,4 @@ class Config(BaseModel):
         return credentials
 
 
-config = Config.load_from_yaml(".seedo.yaml")
+config = Config.load_from_yaml(".autotab.yaml")

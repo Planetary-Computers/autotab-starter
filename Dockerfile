@@ -33,10 +33,10 @@ RUN pip3 install -r requirements.txt
 
 # Copy source code and configuration file
 COPY src src
-COPY .seedo.yaml .seedo.yaml
+COPY .autotab.yaml .autotab.yaml
 
 # Set environment variable and command to run
-ENV SEEDO_ENVIRONMENT=container
+ENV AUTOTAB_ENVIRONMENT=container
 ARG FIGMA_URL
 ARG COMPANY_NAME
 CMD python -u -m src.mockups_done ${FIGMA_URL} ${COMPANY_NAME}
