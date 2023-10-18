@@ -27,10 +27,16 @@ def open_plugin_and_login(driver):
 
 
 def select_google_account(driver, credentials):
-    xpath = f"//div[@data-identifier='{credentials.email}']"
-    driver.switch_to.window(driver.window_handles[1])
-    WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, f"{xpath}"))
-    )
-    driver.find_element(By.XPATH, f"{xpath}").click()
-    time.sleep(0.7)
+    try:
+        xpath = f"//div[@data-identifier='{credentials.email}']"
+        driver.switch_to.window(driver.window_handles[1])
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, f"{xpath}"))
+        )
+        driver.find_element(
+            By.XPATH, f"{xpath}"
+        ).click()
+        time.sleep(0.7)
+    except Exception as e:
+        print(f"select login error: {e}")
+
