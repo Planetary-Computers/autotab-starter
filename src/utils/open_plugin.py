@@ -12,6 +12,9 @@ from src.utils.config import config
 def open_plugin_and_login(driver):
     driver.get("https://google.com")
     time.sleep(1)
+
+    driver.execute_script("document.activeElement.blur();")
+    pyautogui.press("esc", presses=3)
     pyautogui.hotkey(["command", "shift", "y"], interval=0.05)
     time.sleep(1.5)
 
@@ -33,10 +36,7 @@ def select_google_account(driver, credentials):
         WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.XPATH, f"{xpath}"))
         )
-        driver.find_element(
-            By.XPATH, f"{xpath}"
-        ).click()
+        driver.find_element(By.XPATH, f"{xpath}").click()
         time.sleep(0.7)
     except Exception as e:
         print(f"select login error: {e}")
-

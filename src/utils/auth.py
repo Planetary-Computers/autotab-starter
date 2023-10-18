@@ -5,9 +5,16 @@ from typing import Optional
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
 
 from src.utils.config import SiteCredentials, config
 from src.utils.url_utils import extract_domain_from_url
+
+
+def is_signed_in_to_google(driver):
+    cookies = driver.get_cookies()
+    return len([c for c in cookies if c["name"] == "SAPISID"]) != 0
 
 
 def google_login(
@@ -17,6 +24,9 @@ def google_login(
     if navigate:
         driver.get("https://accounts.google.com/")
         time.sleep(1)
+        if is_signed_in_to_google(driver):
+            print("Already signed in to Google")
+            return
 
     if os.path.exists("google_cookies.json"):
         print("cookies exist, doing loading")
@@ -37,7 +47,6 @@ def google_login(
     if credentials is None:
         raise Exception("No credentials provided for Google login")
 
-    print(f"credentials: {credentials}")
     email_input = driver.find_element(By.CSS_SELECTOR, "[type='email']")
     email_input.send_keys(credentials.email)
     email_input.send_keys(Keys.ENTER)
@@ -50,7 +59,7 @@ def google_login(
     print("Successfully logged in to Google")
 
     cookies = driver.get_cookies()
-    if len([c for c in cookies if c["name"] == "SAPISID"]) == 0:
+    if not is_signed_in_to_google(driver):
         # Probably wanted to have us solve a captcha, or 2FA or confirm recovery details
         print("Need 2FA help to log in to Google")
         # TODO: Show screenshot it to the user
@@ -92,7 +101,7 @@ def login(driver, url: str):
     credentials = config.get_site_credentials(domain)
     login_url = credentials.login_url
     if credentials.login_with_google:
-        _login_with_google(driver, login_url)
+        _login_with_google(driver, login_url, credentials.email)
     else:
         _login(driver, login_url, credentials=credentials)
 
@@ -111,17 +120,20 @@ def _login(driver, url: str, credentials: SiteCredentials):
     print(f"Successfully logged in to {url}")
 
 
-def _login_with_google(driver, url: str):
+def _login_with_google(driver, url: str, email: str):
     print(f"Logging in to {url} with Google")
 
     google_login(driver)
 
     driver.get(url)
-    time.sleep(2)
+    WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.TAG_NAME, "body"))
+    )
 
     main_window = driver.current_window_handle
     driver.find_element(
-        By.XPATH, "//*[contains(text(), 'Continue with Google')]"
+        By.XPATH,
+        "//*[contains(text(), 'Continue with Google') or contains(text(), 'Sign in with Google') or contains(@title, 'Sign in with Google')]",
     ).click()
 
     driver.switch_to.window(driver.window_handles[-1])
