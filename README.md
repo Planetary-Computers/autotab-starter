@@ -13,22 +13,20 @@ It usually takes 5-10 minutes to get everything set up (including gathering pass
 
 ### Installation
 
-This scraper is designed to work with Chrome. If you wish to use a different browser, you will need to modify the script accordingly. The location for Chrome is specified by `chrome_binary_location` in the `autotab.yaml` config file.
+See the quickstart above (Steps 1-3).
+
+If you want to use a different browser that is not Chrome, you will need to modify the script accordingly. The location for Chrome is specified by `chrome_binary_location` in the `autotab.yaml` config file.
 
 In addition to Chrome, Selenium requires `chromedriver` to operate. On a Mac, you can easily install chromedriver using homebrew: `brew install --cask chromedriver`.
 
-Next, install the Python dependencies. First, create a virtual environment, then run `make install`. This will install all the dependencies and install the local package as well which enables the `autotab record` and `autotab play` commands.
+Running `make install` installs all the dependencies and the local package which enables the `autotab record` and `autotab play` commands.
 
 ### Secrets
 
 Create a `.autotab.yaml` file in the root folder and populate it with the variables listed in the `.example.autotab.yaml` file.
 
-The first time the scraper logs into Google, it may require 2FA depending on your settings. The script will store the relevant cookies to avoid 2FA in subsequent runs. Please note that these cookies are stored in a google_cookies.json file, which should be handled with care as it contains sensitive information (we store the logged-out cookies, so even if someone gets those cookies they still need your password to gain access).
+The first time an agent logs into Google, it may require 2FA depending on your settings. The script will store the relevant cookies to avoid 2FA in subsequent runs. Please note that these cookies are stored in a google_cookies.json file, which should be handled with care as it contains sensitive information (we store the logged-out cookies, so even if someone gets those cookies they still need your password to gain access).
 
 ## Running the automation
 
 To run an automation, simply run `autotab play`. This will let you choose from the files in the agents/ folder and then run those.
-
-### Headless (remote)
-
-Details on remote headless operation will be added soon.
