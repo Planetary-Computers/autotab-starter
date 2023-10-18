@@ -63,7 +63,7 @@ class Config(BaseModel):
         if not credentials.email:
             credentials.email = self.default_email
         return credentials
-    
+
     @property
     def autotab_credentials(self) -> SiteCredentials:
         return SiteCredentials(email=self.autotab_email, password=self.autotab_password)

@@ -1,6 +1,7 @@
 import json
 import os
 import time
+from typing import Optional
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -9,7 +10,9 @@ from src.utils.config import SiteCredentials, config
 from src.utils.url_utils import extract_domain_from_url
 
 
-def google_login(driver, credentials: SiteCredentials = None, navigate: bool = True):
+def google_login(
+    driver, credentials: Optional[SiteCredentials] = None, navigate: bool = True
+):
     print("Logging in to Google")
     if navigate:
         driver.get(
@@ -18,7 +21,7 @@ def google_login(driver, credentials: SiteCredentials = None, navigate: bool = T
         time.sleep(1)
 
     if os.path.exists("google_cookies.json"):
-        print('cookies exist, doing loading')
+        print("cookies exist, doing loading")
         with open("google_cookies.json", "r") as f:
             google_cookies = json.load(f)
             for cookie in google_cookies:
@@ -29,16 +32,19 @@ def google_login(driver, credentials: SiteCredentials = None, navigate: bool = T
             time.sleep(1)
             driver.refresh()
             time.sleep(2)
-    
+
     if not credentials:
         credentials = config.get_site_credentials("google.com")
-    print('credentials: {}'.format(credentials))
+
+    if credentials is None:
+        raise Exception("No credentials provided for Google login")
+
+    print(f"credentials: {credentials}")
     email_input = driver.find_element(By.CSS_SELECTOR, "[type='email']")
     email_input.send_keys(credentials.email)
     email_input.send_keys(Keys.ENTER)
     time.sleep(2)
-    
-    
+
     password_input = driver.find_element(By.CSS_SELECTOR, "[type='password']")
     password_input.send_keys(credentials.password)
     password_input.send_keys(Keys.ENTER)
