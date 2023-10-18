@@ -27,7 +27,7 @@ The first time the scraper logs into Google, it may require 2FA depending on you
 
 ## Running the automation
 
-TODO
+To run an automation, simply run `autotab play`. This will let you choose from the files in the agents/ folder and then run those.
 
 ### Headless (remote)
 

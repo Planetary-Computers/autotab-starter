@@ -1,6 +1,5 @@
 import os
 
-from src.utils.auth import login
 from src.utils.driver import get_driver
 
 

@@ -1,14 +1,23 @@
 import os
+from typing import Optional
 
 
-def play():
-    # load_dotenv()
-    # driver = get_driver()
-    # # driver.get("https://www.google.com/")
-    # Run the script at agents/agent.py
-    os.system("python agents/agent.py")
-    # while True:
-    #     time.sleep(1)
+def play(agent_file: Optional[str] = None):
+    if agent_file is None:
+        agent_files = os.listdir("agents")
+        if len(agent_files) == 0:
+            raise Exception("No agents found in agents/ directory")
+        elif len(agent_files) == 1:
+            agent_file = agent_files[0]
+        else:
+            print("Found multiple agent files, please select one:")
+            for i, file in enumerate(agent_files, start=1):
+                print(f"{i}. {file}")
+
+            selected = int(input("Select a file by number: ")) - 1
+            agent_file = agent_files[selected]
+
+    os.system(f"python agents/{agent_file}")
 
 
 if __name__ == "__main__":
