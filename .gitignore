@@ -3,7 +3,9 @@
 .autotab.yaml
 google_cookies.json
 .mypy_cache/**
+# Remove this if you want to track your agents with git
 agents/**
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
