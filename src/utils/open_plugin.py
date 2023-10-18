@@ -9,18 +9,21 @@ from src.utils.auth import google_login
 from src.utils.config import config
 
 
-def open_plugin(driver):
-    driver.get("https://autotab.com")
+def open_plugin_and_login(driver):
+    driver.get("https://google.com")
     time.sleep(1)
     pyautogui.hotkey(["command", "shift", "y"], interval=0.05)
     time.sleep(1.5)
-    google_login(driver, config.autotab_credentials, navigate=True)
-    driver.get("https://autotab.com")
 
-    pyautogui.hotkey(["command", "shift", "i"], interval=0.05)
-    time.sleep(3)
-    select_google_account(driver, config.autotab_credentials)
-    time.sleep(0.5)
+    if config.autotab_credentials is not None:
+        google_login(driver, config.autotab_credentials, navigate=True)
+
+        pyautogui.hotkey(["command", "shift", "i"], interval=0.05)
+        time.sleep(3)
+        select_google_account(driver, config.autotab_credentials)
+        time.sleep(0.5)
+    else:
+        print("Autotab credentials not found in config, skipping login to extension")
 
 
 def select_google_account(driver, credentials):

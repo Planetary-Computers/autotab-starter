@@ -15,9 +15,7 @@ def google_login(
 ):
     print("Logging in to Google")
     if navigate:
-        driver.get(
-            "https://accounts.google.com/v3/signin/identifier?continue=http%3A%2F%2Fdrive.google.com%2F%3Futm_source%3Den&ifkv=AYZoVhcdl5uTLa1Efje9aLyU2pr3EpjwRt4wwtepr_Lk7oaSb4MO0vq3gSYUOxyw2gtD6LYxTHfeug&ltmpl=drive&passive=true&service=wise&usp=gtd&utm_campaign=web&utm_content=gotodrive&utm_medium=button&flowName=GlifWebSignIn&flowEntry=ServiceLogin&dsh=S-1861333869%3A1696520938684040&theme=glif"
-        )
+        driver.get("https://accounts.google.com/")
         time.sleep(1)
 
     if os.path.exists("google_cookies.json"):

@@ -7,7 +7,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 
 from src.utils.config import config
-from src.utils.open_plugin import open_plugin
+from src.utils.open_plugin import open_plugin_and_login
 
 
 class AutotabChromeDriver(webdriver.Chrome):
@@ -25,9 +25,7 @@ class AutotabChromeDriver(webdriver.Chrome):
             raise e
 
 
-def get_driver(
-    autotab_ext_path: str = "./src/extension/autotab.crx", record_mode: bool = False
-):
+def get_driver(autotab_ext_path: Optional[str] = None, record_mode: bool = False):
     options = webdriver.ChromeOptions()
     options.add_argument("--no-sandbox")  # Necessary for running
     options.add_argument(
@@ -44,18 +42,10 @@ def get_driver(
         prefs = {**prefs, "download.default_directory": "/tmp"}
     options.add_experimental_option("prefs", prefs)
 
-    if autotab_ext_path:
-        # options.add_extension(autotab_ext_path)
-
-        # chrome_options.add_argument("user-data-dir=C:/Users/charl/OneDrive/python/userprofile/profilename"
-        unpacked_extension_path = (
-            "/Users/alexirobbins/Sites/code/autotab/extension/build"
-        )
-        options.add_argument(f"--load-extension={unpacked_extension_path}")
-
-        # options.add_argument('load-extension=' + 'autotab')
-        # options.add_argument('load-extension=' + autotab_ext_path)
-        # driver.get("chrome-extension://"+autotab_ext_path+"/")
+    if autotab_ext_path is None:
+        options.add_extension("./src/extension/autotab.crx")
+    else:
+        options.add_argument(f"--load-extension={autotab_ext_path}")
 
     if config.environment.is_container:
         # Display needed to render WebGL in headless mode
@@ -86,6 +76,6 @@ def get_driver(
         driver = AutotabChromeDriver(options=options)
 
     if record_mode:
-        open_plugin(driver)
+        open_plugin_and_login(driver)
 
     return driver

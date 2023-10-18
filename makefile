@@ -1,5 +1,10 @@
 .PHONY: format
 
+install:
+	pip install -r requirements.txt &&\
+	pip install -r dev-requirements.txt &&\
+	pip install -e .
+
 format:
 	isort src && black src && flake8 src && mypy src
 

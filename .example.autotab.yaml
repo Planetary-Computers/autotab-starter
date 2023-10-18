@@ -1,7 +1,10 @@
-default_email_address: you@gmail.com
+default_email: you@gmail.com
 
 environment: local # optional, set to "container" to run headless in a container
 chrome_binary_location: /usr/local/bin/chromedriver # required if environment is "local"
+
+autotab_email: you@gmail.com # optional, if set will automatically log you in to the autotab extension
+autotab_password: ... # optional, password you use to log in to Autotab (password to Google if you use log in with Google)
 
 credentials:
   - name: Google
