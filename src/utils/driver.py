@@ -45,11 +45,11 @@ def get_driver(autotab_ext_path: str = './src/extension/autotab.crx', record_mod
     options.add_experimental_option("prefs", prefs)
     
     if autotab_ext_path:
-        # options.add_extension(autotab_ext_path)
+        options.add_extension(autotab_ext_path)
         
         # chrome_options.add_argument("user-data-dir=C:/Users/charl/OneDrive/python/userprofile/profilename"
-        unpacked_extension_path = '/Users/alexirobbins/Sites/code/autotab/extension/build'
-        options.add_argument('--load-extension={}'.format(unpacked_extension_path))
+        # unpacked_extension_path = '/Users/alexirobbins/Sites/code/autotab/extension/build'
+        # options.add_argument('--load-extension={}'.format(unpacked_extension_path))
         
         # options.add_argument('load-extension=' + 'autotab')
         # options.add_argument('load-extension=' + autotab_ext_path)
