@@ -1,19 +1,7 @@
-from enum import Enum
 from typing import Dict, Optional
 
 import yaml
 from pydantic import BaseModel
-
-from src.utils.env import AUTOTAB_ENVIRONMENT
-
-
-class Environment(str, Enum):
-    LOCAL = "local"
-    CONTAINER = "container"
-
-    @property
-    def is_container(self) -> bool:
-        return self == Environment.CONTAINER
 
 
 class SiteCredentials(BaseModel):
@@ -29,8 +17,7 @@ class Config(BaseModel):
     autotab_password: Optional[str]
     default_email: str
     credentials: Dict[str, SiteCredentials]
-    environment: Environment = Environment.LOCAL
-    chrome_binary_location: Optional[str] = None
+    chrome_binary_location: str
 
     @classmethod
     def load_from_yaml(cls, path: str):
@@ -44,17 +31,15 @@ class Config(BaseModel):
                 for domain in creds["domains"]:
                     _credentials[domain] = site_creds
 
-            environment = config.get("environment", Environment.LOCAL)
-            if AUTOTAB_ENVIRONMENT:
-                # .env overrides yaml config
-                environment = AUTOTAB_ENVIRONMENT
+            chrome_binary_location = config.get("chrome_binary_location")
+            if chrome_binary_location is None:
+                raise Exception("Must specify chrome_binary_location in config")
 
             return cls(
                 autotab_email=config.get("autotab_email"),
                 autotab_password=config.get("autotab_password"),
                 default_email=config["default_email"],
                 credentials=_credentials,
-                environment=environment,
                 chrome_binary_location=config.get("chrome_binary_location"),
             )
 

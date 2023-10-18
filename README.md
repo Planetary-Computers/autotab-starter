@@ -2,10 +2,10 @@
 
 ## Quickstart
 
-Want to get going quickly? It takes 5-10 minutes to get all the passwords and dependencies together so everything is set up.
+It usually takes 5-10 minutes to get everything set up (including gathering passwords and installing dependencies). Follow these steps:
 
 1. Create a new Python virtual environment and run `make install` to install all the dependencies. (~1 minute)
-2. Install Google Chrome if you don't already have it installed. Then install chromedriver, which you can do with `brew install --cask chromedriver` on MacOS if you have homebrew installed.
+2. Install Google Chrome if you don't already have it installed. Then install chromedriver, which you can do with `brew install --cask chromedriver` on MacOS if you have homebrew installed. (~2 minutes)
 3. Configure your credentials: Create a `.autotab.yaml` file following the example in `.example.autotab.yaml`. (~1 minute)
 4. Setup done! Run `autotab record` to open a new browser window where you can start recording your actions.
 

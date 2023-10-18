@@ -1,7 +1,6 @@
 from tempfile import mkdtemp
 from typing import Dict, Optional, Union
 
-from pyvirtualdisplay import Display
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
@@ -38,8 +37,6 @@ def get_driver(autotab_ext_path: Optional[str] = None, record_mode: bool = False
     prefs: Dict[str, Union[int, str]] = {
         "profile.default_content_setting_values.cookies": 1
     }
-    if config.environment.is_container:
-        prefs = {**prefs, "download.default_directory": "/tmp"}
     options.add_experimental_option("prefs", prefs)
 
     if autotab_ext_path is None:
@@ -47,33 +44,12 @@ def get_driver(autotab_ext_path: Optional[str] = None, record_mode: bool = False
     else:
         options.add_argument(f"--load-extension={autotab_ext_path}")
 
-    if config.environment.is_container:
-        # Display needed to render WebGL in headless mode
-        display = Display(visible=False, size=(1920, 1080))
-        display.start()
+    options.add_argument("--allow-running-insecure-content")
+    options.add_argument("--disable-web-security")
+    options.add_argument(f"--user-data-dir={mkdtemp()}")
+    options.binary_location = config.chrome_binary_location
 
-        options.add_argument("--headless")
-        options.add_argument("--ignore-gpu-blacklist")
-        options.binary_location = "/opt/chrome/chrome"
-        options.add_argument("--window-size=1280x1696")
-        options.add_argument("--single-process")
-        options.add_argument("--disable-dev-shm-usage")
-        options.add_argument("--disable-dev-tools")
-        options.add_argument("--allow-running-insecure-content")
-        options.add_argument("--disable-web-security")
-        options.add_argument("--no-zygote")
-        options.add_argument(f"--user-data-dir={mkdtemp()}")
-        options.add_argument(f"--data-path={mkdtemp()}")
-        options.add_argument(f"--disk-cache-dir={mkdtemp()}")
-        options.add_argument("--remote-debugging-port=9222")
-        driver = AutotabChromeDriver("/opt/chromedriver", options=options)
-    else:
-        options.add_argument("--allow-running-insecure-content")
-        options.add_argument("--disable-web-security")
-        options.add_argument(f"--user-data-dir={mkdtemp()}")
-        options.binary_location = config.chrome_binary_location
-
-        driver = AutotabChromeDriver(options=options)
+    driver = AutotabChromeDriver(options=options)
 
     if record_mode:
         open_plugin_and_login(driver)

@@ -54,11 +54,7 @@ def google_login(
         # Probably wanted to have us solve a captcha, or 2FA or confirm recovery details
         print("Need 2FA help to log in to Google")
         # TODO: Show screenshot it to the user
-        if config.environment.is_container:
-            driver.get_screenshot_as_file("/var/task/2fa.png")
-            time.sleep(30)  # Give time to solve 2FA
-        else:
-            breakpoint()
+        breakpoint()
 
     if not os.path.exists("google_cookies.json"):
         print("Setting Google cookies for future use")
