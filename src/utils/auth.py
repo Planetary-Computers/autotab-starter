@@ -50,7 +50,9 @@ def google_login(
     email_input = driver.find_element(By.CSS_SELECTOR, "[type='email']")
     email_input.send_keys(credentials.email)
     email_input.send_keys(Keys.ENTER)
-    time.sleep(2)
+    WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.CSS_SELECTOR, "[type='password']"))
+    )
 
     password_input = driver.find_element(By.CSS_SELECTOR, "[type='password']")
     password_input.send_keys(credentials.password)
