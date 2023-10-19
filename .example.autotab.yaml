@@ -1,0 +1,23 @@
+default_email: you@gmail.com
+chrome_binary_location: /Applications/Google Chrome.app/Contents/MacOS/Google Chrome
+
+autotab_email: you@gmail.com # Google account email for autotab, set for automatic login [Optional]
+autotab_password: ... # Google account password for autotab, set for automatic login [Optional]
+
+credentials:
+  - name: Google
+    login_url: https://accounts.google.com/v3/signin # Optional, defaults to https://{domain}/login
+    domains:
+    - google.com
+    password: ...
+
+  - name: Notion
+    domains:
+    - notion.so
+    - notion.com
+    login_with_google: true
+
+  - name: Figma
+    domains:
+    - figma.com
+    password: ...
