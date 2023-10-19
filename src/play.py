@@ -2,8 +2,8 @@ import os
 from typing import Optional
 
 
-def play(agent_file: Optional[str] = None):
-    if agent_file is None:
+def play(agent_name: Optional[str] = None):
+    if agent_name is None:
         agent_files = os.listdir("agents")
         if len(agent_files) == 0:
             raise Exception("No agents found in agents/ directory")
@@ -16,6 +16,8 @@ def play(agent_file: Optional[str] = None):
 
             selected = int(input("Select a file by number: ")) - 1
             agent_file = agent_files[selected]
+    else:
+        agent_file = f"{agent_name}.py"
 
     os.system(f"python agents/{agent_file}")
 

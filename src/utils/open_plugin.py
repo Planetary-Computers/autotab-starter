@@ -9,14 +9,18 @@ from src.utils.auth import google_login
 from src.utils.config import config
 
 
+def open_plugin(driver):
+    driver.execute_script("document.activeElement.blur();")
+    pyautogui.press("esc")
+    pyautogui.hotkey(["command", "shift", "y"], interval=0.05)
+    time.sleep(1.5)
+
+
 def open_plugin_and_login(driver):
     driver.get("https://google.com")
     time.sleep(1)
 
-    driver.execute_script("document.activeElement.blur();")
-    pyautogui.press("esc", presses=3)
-    pyautogui.hotkey(["command", "shift", "y"], interval=0.05)
-    time.sleep(1.5)
+    open_plugin(driver)
 
     if config.autotab_credentials is not None:
         google_login(driver, config.autotab_credentials, navigate=True)
@@ -30,13 +34,30 @@ def open_plugin_and_login(driver):
 
 
 def select_google_account(driver, credentials):
+    if len(driver.window_handles) == 1:
+        open_plugin(driver)
+        pyautogui.hotkey(["command", "shift", "i"], interval=0.05)
+
+    driver.switch_to.window(driver.window_handles[1])
+
     try:
         xpath = f"//div[@data-identifier='{credentials.email}']"
-        driver.switch_to.window(driver.window_handles[1])
-        WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, f"{xpath}"))
+        WebDriverWait(driver, 2).until(
+            EC.presence_of_element_located((By.XPATH, xpath))
         )
-        driver.find_element(By.XPATH, f"{xpath}").click()
+        driver.find_element(By.XPATH, xpath).click()
         time.sleep(0.7)
-    except Exception as e:
-        print(f"select login error: {e}")
+        return
+    except Exception:
+        pass
+
+    try:
+        xpath = f"//div[@data-email='{credentials.email}']"
+        WebDriverWait(driver, 2).until(
+            EC.presence_of_element_located((By.XPATH, xpath))
+        )
+        driver.find_element(By.XPATH, xpath).click()
+        time.sleep(0.7)
+        return
+    except Exception:
+        print(f"Could not find account {credentials.email}")
