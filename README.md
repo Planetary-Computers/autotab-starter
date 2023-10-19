@@ -1,16 +1,26 @@
 # autotab
 
-Welcome to autotab! autotab makes it easy to create auditable browser automations using AI. Go from a point & click demonstration in the browser to immediately having code for those actions in seconds.
+Welcome to autotab! autotab makes it easy to create auditable browser automations using AI. Go from a point & click demonstration in the browser to live code for those actions in seconds.
 
 ## Quickstart
 
-It usually takes 5-10 minutes to get everything set up (including gathering passwords and installing dependencies). Follow these steps:
+It usually takes 5-10 minutes to get everything set up (including gathering passwords and installing dependencies). You must have the Chrome browser installed, and we recommend setting up a Python virtual environment:
 
-0. `git clone` this repository.
-1. Create a new Python virtual environment and run `make install` to install all the dependencies. (~1 minute)
-2. Install Google Chrome if you don't already have it installed. Then install chromedriver, which you can do with `brew install --cask chromedriver` on MacOS if you have homebrew installed. (~2 minutes)
-3. Configure your credentials: Create a `.autotab.yaml` file following the example in `.example.autotab.yaml`. (~3 minutes)
-4. Setup done! Run `autotab record` to open a new browser window where you can start recording your actions.
+```bash
+git clone https://github.com/Planetary-Computers/autotab-starter.git
+cd autotab-starter
+# Recommended: Setup a Python virtual environment
+make install
+brew install --cask chromedriver
+```
+
+### Configuration
+
+Configure your credentials: Create a `.autotab.yaml` file following the example in `.example.autotab.yaml`. (~3 minutes)
+
+### Run
+
+Run `autotab record` to open a new browser window where you can start recording your actions.
 
 ## Usage
 

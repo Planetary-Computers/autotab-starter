@@ -1,12 +1,12 @@
 default_email: you@gmail.com
 chrome_binary_location: /Applications/Google Chrome.app/Contents/MacOS/Google Chrome
 
-autotab_email: you@gmail.com # optional, if set will automatically log you in to the autotab extension
-autotab_password: ... # optional, password you use to log in to Autotab (password to Google if you use log in with Google)
+autotab_email: you@gmail.com # Google account email for autotab, set for automatic login [Optional]
+autotab_password: ... # Google account password for autotab, set for automatic login [Optional]
 
 credentials:
   - name: Google
-    login_url: https://accounts.google.com/v3/signin # optional, defaults to https://{domain}/login
+    login_url: https://accounts.google.com/v3/signin # Optional, defaults to https://{domain}/login
     domains:
     - google.com
     password: ...
