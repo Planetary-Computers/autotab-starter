@@ -42,7 +42,7 @@ To play an automation you've already created, run `autotab play --agent <agent_n
 
 ### Installation
 
-See the quickstart above (Steps 1 aand 2).
+See the quickstart above (Steps 1 and 2).
 
 Running `make install` installs all the dependencies as well as the local package which enables the `autotab record` and `autotab play` commands.
 
