@@ -5,8 +5,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-from src.utils.auth import google_login
-from src.utils.config import config
+from utils.auth import google_login
+from utils.config import config
 
 
 def open_plugin(driver):

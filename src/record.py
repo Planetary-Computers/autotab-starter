@@ -1,6 +1,6 @@
 import os
 
-from src.utils.driver import get_driver
+from utils.driver import get_driver
 
 
 def record(agent_name: str):
