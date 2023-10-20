@@ -8,8 +8,9 @@ from selenium.webdriver.remote.webelement import WebElement
 from src.utils.config import config
 from src.utils.open_plugin import open_plugin_and_login
 
+import undetected_chromedriver as uc
 
-class AutotabChromeDriver(webdriver.Chrome):
+class AutotabChromeDriver(uc.Chrome):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -34,10 +35,10 @@ def get_driver(autotab_ext_path: Optional[str] = None, record_mode: bool = False
     options.add_argument("--enable-3d-apis")
     options.add_argument("--enable-clipboard-read-write")
 
-    prefs: Dict[str, Union[int, str]] = {
-        "profile.default_content_setting_values.cookies": 1
-    }
-    options.add_experimental_option("prefs", prefs)
+    #prefs: Dict[str, Union[int, str]] = {
+    #    "profile.default_content_setting_values.cookies": 1
+    #}
+    #options.add_experimental_option("prefs", prefs)
 
     if autotab_ext_path is None:
         options.add_extension("./src/extension/autotab.crx")
