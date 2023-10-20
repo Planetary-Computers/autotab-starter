@@ -41,7 +41,7 @@ def get_driver(autotab_ext_path: Optional[str] = None, record_mode: bool = False
     #options.add_experimental_option("prefs", prefs)
 
     if autotab_ext_path is None:
-        options.add_extension("./src/extension/autotab.crx")
+        options.add_argument("--load-extension=./src/extension/autotab")
     else:
         options.add_argument(f"--load-extension={autotab_ext_path}")
 
