@@ -1,9 +1,9 @@
 .PHONY: format
 
 install:
-	pip install -r requirements.txt &&\
-	pip install -r requirements-dev.txt &&\
-	pip install -e .
+	python3 -m pip install -r requirements.txt &&\
+	python3 -m pip install -r requirements-dev.txt &&\
+	python3 -m pip install -e .
 
 format:
 	isort src && black src && flake8 src && mypy src

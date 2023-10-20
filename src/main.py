@@ -1,6 +1,7 @@
 import argparse
-from record import record
+
 from play import play
+from record import record
 
 
 def main():
