@@ -1,10 +1,18 @@
 import os
 
+from dotenv import load_dotenv
+
 from utils.driver import get_driver
+
+load_dotenv()
 
 
 def record(agent_name: str):
+    autotab_ext_path = os.environ.get("AUTOTAB_EXT_PATH")
+    if autotab_ext_path:
+        print(f"Using extension at {autotab_ext_path}")
     driver = get_driver(  # noqa: F841
+        autotab_ext_path=autotab_ext_path,
         record_mode=True,
     )
     # Need to keep a reference to the driver so that it doesn't get garbage collected
