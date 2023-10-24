@@ -22,7 +22,7 @@ Configure your credentials: Create a `.autotab.yaml` file following the example 
 
 Run `autotab record` to open a new browser window where you can start recording your actions.
 
-> Note: When you run `autotab record`, an automation will first try to log you in to autotab. You need to be logged in to autotab to use the extension (and our Open AI API key). Currently autotab only supports logging in with Google, so it will log you in to Google first, then log you in to autotab using the credentials in your `.autotab.yaml` file.
+> Note: When you run `autotab record`, an automation will first try to log you in to autotab using the `autotab_api_key` from your `.autotab.yaml` file. You need to be logged in to autotab to use the extension (and our Open AI API key). You log in to `autotab record` using your autotab API key which you can get for free at [autotab.com/dashboard](https://autotab.com/dashboard).
 
 ## Usage
 

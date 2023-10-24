@@ -1,13 +1,15 @@
+import time
 from tempfile import mkdtemp
 from typing import Optional
 
+import pyautogui
+import requests
 import undetected_chromedriver as uc
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 
 from utils.config import config
-from utils.open_plugin import open_plugin_and_login
 
 
 class AutotabChromeDriver(uc.Chrome):
@@ -25,7 +27,47 @@ class AutotabChromeDriver(uc.Chrome):
             raise e
 
 
-def get_driver(autotab_ext_path: Optional[str] = None, record_mode: bool = False):
+def open_plugin_and_login(driver: AutotabChromeDriver):
+    if config.autotab_api_key is not None:
+        backend_url = (
+            "http://localhost:8000"
+            if config.environment == "local"
+            else "https://api.autotab.com"
+        )
+        driver.get(f"{backend_url}/auth/signin-api-key-page")
+        response = requests.post(
+            f"{backend_url}/auth/signin-api-key",
+            json={"api_key": config.autotab_api_key},
+        )
+        cookie = response.json()
+        if response.status_code != 200:
+            if response.status_code == 401:
+                raise Exception("Invalid API key")
+            else:
+                raise Exception(
+                    f"Error {response.status_code} from backend while logging you in with your API key: {response.text}"
+                )
+        cookie["name"] = cookie["key"]
+        del cookie["key"]
+        driver.add_cookie(cookie)
+        driver.get("https://www.google.com")
+    else:
+        url = (
+            "http://localhost:3000/dashboard"
+            if config.environment == "local"
+            else "https://autotab.com/dashboard"
+        )
+        driver.get(url)
+
+    driver.execute_script("document.activeElement.blur();")
+    pyautogui.press("esc")
+    pyautogui.hotkey("command", "shift", "y", interval=0.05)
+    time.sleep(1.5)
+
+
+def get_driver(
+    autotab_ext_path: Optional[str] = None, record_mode: bool = False
+) -> AutotabChromeDriver:
     options = webdriver.ChromeOptions()
     options.add_argument("--no-sandbox")  # Necessary for running
     options.add_argument(
