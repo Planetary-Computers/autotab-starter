@@ -1,8 +1,8 @@
 default_email: you@gmail.com
 chrome_binary_location: /Applications/Google Chrome.app/Contents/MacOS/Google Chrome
 
-autotab_email: you@gmail.com # Google account email for autotab, set for automatic login [Optional]
-autotab_password: ... # Google account password for autotab, set for automatic login [Optional]
+autotab_api_key: ... # Go to https://autotab.com/dashboard to get your API key, or
+# run `autotab record` with this field blank and you will be prompted to log in to autotab
 
 credentials:
   - name: Google
