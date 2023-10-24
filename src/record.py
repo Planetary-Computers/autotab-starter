@@ -1,11 +1,10 @@
 import os
 
-from src.utils.driver import get_driver
+from utils.driver import get_driver
 
 
 def record(agent_name: str):
     driver = get_driver(  # noqa: F841
-        autotab_ext_path="/Users/jonas/Desktop/autotab/extension/build",
         record_mode=True,
     )
     # Need to keep a reference to the driver so that it doesn't get garbage collected

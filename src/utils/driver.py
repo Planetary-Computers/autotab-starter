@@ -5,8 +5,8 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 
-from src.utils.config import config
-from src.utils.open_plugin import open_plugin_and_login
+from utils.config import config
+from utils.open_plugin import open_plugin_and_login
 
 
 class AutotabChromeDriver(webdriver.Chrome):
