@@ -6,4 +6,4 @@ pyyaml==6.0.*
 pyvirtualdisplay==3.0
 pydantic==2.4.*
 pyautogui==0.9.*
-undetected-chromedriver==3.*
+undetected-chromedriver==3.5.*
