@@ -1,4 +1,5 @@
 import os
+from typing import Optional
 
 from dotenv import load_dotenv
 
@@ -7,10 +8,7 @@ from utils.driver import get_driver
 load_dotenv()
 
 
-def record(agent_name: str):
-    autotab_ext_path = os.environ.get("AUTOTAB_EXT_PATH")
-    if autotab_ext_path:
-        print(f"Using extension at {autotab_ext_path}")
+def record(agent_name: str, autotab_ext_path: Optional[str] = None):
     driver = get_driver(  # noqa: F841
         autotab_ext_path=autotab_ext_path,
         record_mode=True,

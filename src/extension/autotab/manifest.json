@@ -1,0 +1,69 @@
+{
+  "name": "autotab",
+  "description": "Automating browser-based knowledge work",
+  "version": "1.0.1",
+  "manifest_version": 3,
+  "action": {
+    "default_popup": "src/popup/index.html"
+  },
+  "commands": {
+    "login": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+I",
+        "mac": "Command+Shift+I"
+      },
+      "description": "Login to autotab"
+    },
+    "_execute_action": {
+      "suggested_key": {
+        "mac": "Command+Shift+Y"
+      },
+      "description": "Open autotab"
+    }
+  },
+  "background": {
+    "service_worker": "service-worker-loader.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "js": [
+        "assets/index.tsx-loader.41e5026d.js"
+      ],
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ]
+    }
+  ],
+  "side_panel": {
+    "default_path": "src/sidepanel/index.html"
+  },
+  "host_permissions": [
+    "http://localhost:*/*",
+    "https://*.autotab.com/*"
+  ],
+  "permissions": [
+    "sidePanel",
+    "activeTab",
+    "scripting",
+    "tabs",
+    "storage",
+    "cookies"
+  ],
+  "web_accessible_resources": [
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "resources": [
+        "assets/chunk-2b0e9822.js",
+        "assets/chunk-f0ce9ccd.js",
+        "assets/chunk-7b390575.js",
+        "assets/chunk-5c235a21.js"
+      ],
+      "use_dynamic_url": true
+    }
+  ]
+}

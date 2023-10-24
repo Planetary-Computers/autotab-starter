@@ -3,8 +3,8 @@ from setuptools import setup, find_packages
 setup(
     name="autotab",
     description="Build browser agents for real world tasks.",
-    version="0.1",
-    packages=find_packages(where="src"),
+    version="0.1.0",
+    py_modules=["autotab"],
     package_dir={"": "src"},
     entry_points={
         "console_scripts": [
