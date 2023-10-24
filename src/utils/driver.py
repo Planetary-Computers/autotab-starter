@@ -27,6 +27,14 @@ class AutotabChromeDriver(uc.Chrome):
             raise e
 
 
+def open_plugin(driver: AutotabChromeDriver):
+    print("Opening plugin sidepanel")
+    driver.execute_script("document.activeElement.blur();")
+    pyautogui.press("esc")
+    pyautogui.hotkey("command", "shift", "y", interval=0.05)  # mypy: ignore
+    time.sleep(1.5)
+
+
 def open_plugin_and_login(driver: AutotabChromeDriver):
     if config.autotab_api_key is not None:
         backend_url = (
@@ -50,19 +58,22 @@ def open_plugin_and_login(driver: AutotabChromeDriver):
         cookie["name"] = cookie["key"]
         del cookie["key"]
         driver.add_cookie(cookie)
+
+        open_plugin(driver)
+
         driver.get("https://www.google.com")
     else:
+        print("No autotab API key found, heading to autotab.com to sign up")
+
         url = (
             "http://localhost:3000/dashboard"
             if config.environment == "local"
             else "https://autotab.com/dashboard"
         )
         driver.get(url)
+        time.sleep(0.5)
 
-    driver.execute_script("document.activeElement.blur();")
-    pyautogui.press("esc")
-    pyautogui.hotkey("command", "shift", "y", interval=0.05)
-    time.sleep(1.5)
+        open_plugin(driver)
 
 
 def get_driver(
