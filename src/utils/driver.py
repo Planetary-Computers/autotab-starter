@@ -10,7 +10,7 @@ from utils.config import config
 from utils.open_plugin import open_plugin_and_login
 
 
-class AutotabChromeDriver(webdriver.Chrome):
+class AutotabChromeDriver(uc.Chrome):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 

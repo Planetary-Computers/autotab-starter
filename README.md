@@ -22,11 +22,8 @@ Configure your credentials: Create a `.autotab.yaml` file following the example 
 
 Run `autotab record` to open a new browser window where you can start recording your actions.
 
-<<<<<<< HEAD
-=======
 > Note: When you run `autotab record`, an automation will first try to log you in to autotab. You need to be logged in to autotab to use the extension (and our Open AI API key). Currently autotab only supports logging in with Google, so it will log you in to Google first, then log you in to autotab using the credentials in your `.autotab.yaml` file.
 
->>>>>>> 2e1156ddd94cef91243cab43e4bfb8eacea7bacc
 ## Usage
 
 ### Recording an automation
@@ -47,11 +44,7 @@ To play an automation you've already created, run `autotab play --agent <agent_n
 
 ### Installation
 
-<<<<<<< HEAD
-See the quickstart above (Steps 1 aand 2).
-=======
 See the quickstart above (Steps 1 and 2).
->>>>>>> 2e1156ddd94cef91243cab43e4bfb8eacea7bacc
 
 Running `make install` installs all the dependencies as well as the local package which enables the `autotab record` and `autotab play` commands.
 
