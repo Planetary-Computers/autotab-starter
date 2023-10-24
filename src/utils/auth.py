@@ -8,8 +8,8 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
-from src.utils.config import SiteCredentials, config
-from src.utils.url_utils import extract_domain_from_url
+from utils.config import SiteCredentials, config
+from utils.url_utils import extract_domain_from_url
 
 
 def is_signed_in_to_google(driver):
