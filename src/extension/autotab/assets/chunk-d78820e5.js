@@ -1,0 +1,1 @@
+import"./chunk-464ae2db.js";import{c as t,j as e,a as p}from"./chunk-cb29e641.js";t.createRoot(document.getElementById("app")).render(e(p.StrictMode,{children:e("div",{children:"Something unexpected happened - the popup should never appear, only the sidepanel."})}));
