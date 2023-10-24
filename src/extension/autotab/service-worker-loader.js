@@ -1,1 +1,1 @@
-import './assets/chunk-15003502.js';
+import './assets/chunk-23bfb2ca.js';

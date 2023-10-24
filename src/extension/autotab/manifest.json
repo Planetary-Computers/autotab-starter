@@ -1,7 +1,7 @@
 {
   "name": "autotab",
   "description": "Automating browser-based knowledge work",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "manifest_version": 3,
   "action": {
     "default_popup": "src/popup/index.html"
@@ -16,7 +16,6 @@
     },
     "_execute_action": {
       "suggested_key": {
-        "default": "Ctrl+Shift+Y",
         "mac": "Command+Shift+Y"
       },
       "description": "Open autotab"
@@ -29,7 +28,7 @@
   "content_scripts": [
     {
       "js": [
-        "assets/index.tsx-loader.cda97a42.js"
+        "assets/index.tsx-loader.41e5026d.js"
       ],
       "matches": [
         "http://*/*",
@@ -62,7 +61,7 @@
         "assets/chunk-2b0e9822.js",
         "assets/chunk-f0ce9ccd.js",
         "assets/chunk-7b390575.js",
-        "assets/chunk-3e69e640.js"
+        "assets/chunk-5c235a21.js"
       ],
       "use_dynamic_url": true
     }

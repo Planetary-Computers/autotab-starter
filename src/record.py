@@ -3,8 +3,9 @@ import os
 from src.utils.driver import get_driver
 
 
-def record(agent_name: str):
+def record(agent_name: str, autotab_ext_path: str = None):
     driver = get_driver(  # noqa: F841
+        autotab_ext_path=autotab_ext_path,
         record_mode=True,
     )
     # Need to keep a reference to the driver so that it doesn't get garbage collected
