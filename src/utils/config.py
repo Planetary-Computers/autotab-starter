@@ -13,11 +13,11 @@ class SiteCredentials(BaseModel):
 
 
 class Config(BaseModel):
-    autotab_email: Optional[str]
-    autotab_password: Optional[str]
+    autotab_api_key: Optional[str]
     default_email: str
     credentials: Dict[str, SiteCredentials]
     chrome_binary_location: str
+    environment: str
 
     @classmethod
     def load_from_yaml(cls, path: str):
@@ -35,12 +35,16 @@ class Config(BaseModel):
             if chrome_binary_location is None:
                 raise Exception("Must specify chrome_binary_location in config")
 
+            autotab_api_key = config.get("autotab_api_key")
+            if autotab_api_key == "...":
+                autotab_api_key = None
+
             return cls(
-                autotab_email=config.get("autotab_email"),
-                autotab_password=config.get("autotab_password"),
+                autotab_api_key=autotab_api_key,
                 default_email=config["default_email"],
                 credentials=_credentials,
                 chrome_binary_location=config.get("chrome_binary_location"),
+                environment=config.get("environment", "prod"),
             )
 
     def get_site_credentials(self, domain: str) -> SiteCredentials:
@@ -48,12 +52,6 @@ class Config(BaseModel):
         if not credentials.email:
             credentials.email = self.default_email
         return credentials
-
-    @property
-    def autotab_credentials(self) -> Optional[SiteCredentials]:
-        if self.autotab_email is None and self.autotab_password is None:
-            return None
-        return SiteCredentials(email=self.autotab_email, password=self.autotab_password)
 
 
 config = Config.load_from_yaml(".autotab.yaml")
