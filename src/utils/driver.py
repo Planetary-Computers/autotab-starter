@@ -1,6 +1,7 @@
 from tempfile import mkdtemp
-from typing import Dict, Optional, Union
+from typing import Optional
 
+import undetected_chromedriver as uc
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
@@ -9,7 +10,7 @@ from utils.config import config
 from utils.open_plugin import open_plugin_and_login
 
 
-class AutotabChromeDriver(webdriver.Chrome):
+class AutotabChromeDriver(uc.Chrome):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -34,13 +35,8 @@ def get_driver(autotab_ext_path: Optional[str] = None, record_mode: bool = False
     options.add_argument("--enable-3d-apis")
     options.add_argument("--enable-clipboard-read-write")
 
-    prefs: Dict[str, Union[int, str]] = {
-        "profile.default_content_setting_values.cookies": 1
-    }
-    options.add_experimental_option("prefs", prefs)
-
     if autotab_ext_path is None:
-        options.add_extension("./src/extension/autotab.crx")
+        options.add_argument("--load-extension=./src/extension/autotab")
     else:
         options.add_argument(f"--load-extension={autotab_ext_path}")
 
