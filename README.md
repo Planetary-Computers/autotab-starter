@@ -2,6 +2,8 @@
 
 Welcome to autotab! autotab makes it easy to create auditable browser automations using AI. Go from a point & click demonstration in the browser to live code for those actions in seconds.
 
+> Note: This project is alpha release and actively being developed. Expect breaking changes and exciting new features regularly!
+
 ## Quickstart
 
 It usually takes 5-10 minutes to get everything set up (including gathering passwords and installing dependencies). You must have the Chrome browser installed, and we recommend setting up a Python virtual environment:
