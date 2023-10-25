@@ -1,23 +1,27 @@
-default_email: you@gmail.com
 chrome_binary_location: /Applications/Google Chrome.app/Contents/MacOS/Google Chrome
 
 autotab_api_key: ... # Go to https://autotab.com/dashboard to get your API key, or
 # run `autotab record` with this field blank and you will be prompted to log in to autotab
 
+# Optional, programmatically login to services using "Login with Google" authentication
+google_credentials:
+  - name: default
+    email: ...
+    password: ...
+
+  # Optional, specify alternative accounts to use with Google login on a per-service basis
+  - email: you@gmail.com # Credentials without a name use email as key
+    password: ...
+    
 credentials:
-  - name: Google
-    login_url: https://accounts.google.com/v3/signin # Optional, defaults to https://{domain}/login
-    domains:
-    - google.com
-    password: ...
-
-  - name: Notion
-    domains:
-    - notion.so
+  notion.so: 
+    alts:
     - notion.com
-    login_with_google: true
-
-  - name: Figma
-    domains:
-    - figma.com
+    login_with_google_account: default
+    
+  figma.com:
+    email: ...
     password: ...
+  
+  airtable.com:
+    login_with_google_account: you@gmail.com

@@ -4,7 +4,7 @@ from typing import Optional
 
 import pyautogui
 import requests
-import undetected_chromedriver as uc
+import undetected_chromedriver as uc  # type: ignore
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
@@ -87,6 +87,7 @@ def get_driver(
     options.add_argument("--enable-webgl")
     options.add_argument("--enable-3d-apis")
     options.add_argument("--enable-clipboard-read-write")
+    options.add_argument("--disable-popup-blocking")
 
     if autotab_ext_path is None:
         options.add_argument("--load-extension=./src/extension/autotab")
