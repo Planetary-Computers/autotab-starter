@@ -3,6 +3,7 @@ from typing import Optional
 
 from utils.config import config
 from utils.driver import get_driver
+from server.server import run_server
 
 
 def record(agent_name: str, autotab_ext_path: Optional[str] = None):
@@ -16,6 +17,8 @@ def record(agent_name: str, autotab_ext_path: Optional[str] = None):
         autotab_ext_path=autotab_ext_path,
         record_mode=True,
     )
+    run_server(driver)
+    
     # Need to keep a reference to the driver so that it doesn't get garbage collected
     with open("src/template.py", "r") as file:
         data = file.read()
