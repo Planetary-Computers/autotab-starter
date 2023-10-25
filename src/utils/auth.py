@@ -42,7 +42,7 @@ def google_login(
             time.sleep(2)
 
     if not credentials:
-        credentials = config.get_site_credentials("google.com")
+        credentials = config.google_credentials.default
 
     if credentials is None:
         raise Exception("No credentials provided for Google login")
@@ -102,8 +102,9 @@ def login(driver, url: str):
 
     credentials = config.get_site_credentials(domain)
     login_url = credentials.login_url
-    if credentials.login_with_google:
-        _login_with_google(driver, login_url, credentials.email)
+    if credentials.login_with_google_account:
+        google_credentials = config.google_credentials.credentials[credentials.login_with_google_account]
+        _login_with_google(driver, login_url, google_credentials)
     else:
         _login(driver, login_url, credentials=credentials)
 
@@ -122,10 +123,10 @@ def _login(driver, url: str, credentials: SiteCredentials):
     print(f"Successfully logged in to {url}")
 
 
-def _login_with_google(driver, url: str, email: str):
+def _login_with_google(driver, url: str, google_credentials: SiteCredentials):
     print(f"Logging in to {url} with Google")
 
-    google_login(driver)
+    google_login(driver, credentials=google_credentials)
 
     driver.get(url)
     WebDriverWait(driver, 10).until(
@@ -133,14 +134,18 @@ def _login_with_google(driver, url: str, email: str):
     )
 
     main_window = driver.current_window_handle
+    xpath = "//*[contains(text(), 'Continue with Google') or contains(text(), 'Sign in with Google') or contains(@title, 'Sign in with Google')]"
+
+    WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, xpath))
+    )
     driver.find_element(
         By.XPATH,
-        "//*[contains(text(), 'Continue with Google') or contains(text(), 'Sign in with Google') or contains(@title, 'Sign in with Google')]",
+        xpath,
     ).click()
 
     driver.switch_to.window(driver.window_handles[-1])
-    email = config.get_site_credentials("google.com").email
-    driver.find_element(By.XPATH, f"//*[contains(text(), '{email}')]").click()
+    driver.find_element(By.XPATH, f"//*[contains(text(), '{google_credentials.email}')]").click()
 
     driver.switch_to.window(main_window)
 

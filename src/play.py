@@ -3,6 +3,7 @@ from typing import Optional
 
 
 def play(agent_name: Optional[str] = None):
+    print('hi!')
     if agent_name is None:
         agent_files = os.listdir("agents")
         if len(agent_files) == 0:
