@@ -8,23 +8,23 @@ class SiteCredentials(BaseModel):
     name: Optional[str] = None
     email: Optional[str] = None
     password: Optional[str] = None
-    login_with_google_account: Optional[str] = False
+    login_with_google_account: Optional[str] = None
     login_url: Optional[str] = None
-    
+
     def __init__(self, **data) -> None:
         super().__init__(**data)
         if self.name is None:
             self.name = self.email
 
-    
+
 class GoogleCredentials(BaseModel):
     credentials: Dict[str, SiteCredentials]
-    
+
     def __init__(self, **data) -> None:
         super().__init__(**data)
         for cred in self.credentials.values():
             cred.login_url = "https://accounts.google.com/v3/signin"
-    
+
     @property
     def default(self) -> SiteCredentials:
         if "default" not in self.credentials:
@@ -37,7 +37,7 @@ class GoogleCredentials(BaseModel):
 class Config(BaseModel):
     autotab_api_key: Optional[str]
     credentials: Dict[str, SiteCredentials]
-    google_credentials: GoogleCredentials 
+    google_credentials: GoogleCredentials
     chrome_binary_location: str
     environment: str
 
@@ -53,10 +53,10 @@ class Config(BaseModel):
                 _credentials[domain] = site_creds
                 for alt in creds["alts"]:
                     _credentials[alt] = site_creds
-            
+
             google_credentials = {}
             for creds in config.get("google_credentials", []):
-                credentials : SiteCredentials = SiteCredentials(**creds)
+                credentials: SiteCredentials = SiteCredentials(**creds)
                 google_credentials[credentials.name] = credentials
 
             chrome_binary_location = config.get("chrome_binary_location")

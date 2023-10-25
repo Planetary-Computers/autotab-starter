@@ -103,7 +103,9 @@ def login(driver, url: str):
     credentials = config.get_site_credentials(domain)
     login_url = credentials.login_url
     if credentials.login_with_google_account:
-        google_credentials = config.google_credentials.credentials[credentials.login_with_google_account]
+        google_credentials = config.google_credentials.credentials[
+            credentials.login_with_google_account
+        ]
         _login_with_google(driver, login_url, google_credentials)
     else:
         _login(driver, login_url, credentials=credentials)
@@ -136,16 +138,16 @@ def _login_with_google(driver, url: str, google_credentials: SiteCredentials):
     main_window = driver.current_window_handle
     xpath = "//*[contains(text(), 'Continue with Google') or contains(text(), 'Sign in with Google') or contains(@title, 'Sign in with Google')]"
 
-    WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, xpath))
-    )
+    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, xpath)))
     driver.find_element(
         By.XPATH,
         xpath,
     ).click()
 
     driver.switch_to.window(driver.window_handles[-1])
-    driver.find_element(By.XPATH, f"//*[contains(text(), '{google_credentials.email}')]").click()
+    driver.find_element(
+        By.XPATH, f"//*[contains(text(), '{google_credentials.email}')]"
+    ).click()
 
     driver.switch_to.window(main_window)
 
