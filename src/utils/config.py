@@ -8,14 +8,36 @@ class SiteCredentials(BaseModel):
     name: Optional[str] = None
     email: Optional[str] = None
     password: Optional[str] = None
-    login_with_google: Optional[bool] = False
+    login_with_google_account: Optional[str] = False
     login_url: Optional[str] = None
+    
+    def __init__(self, **data) -> None:
+        super().__init__(**data)
+        if self.name is None:
+            self.name = self.email
+
+    
+class GoogleCredentials(BaseModel):
+    credentials: Dict[str, SiteCredentials]
+    
+    def __init__(self, **data) -> None:
+        super().__init__(**data)
+        for cred in self.credentials.values():
+            cred.login_url = "https://accounts.google.com/v3/signin"
+    
+    @property
+    def default(self) -> SiteCredentials:
+        if "default" not in self.credentials:
+            if len(self.credentials) == 1:
+                return list(self.credentials.values())[0]
+            raise Exception("No default credentials found in config")
+        return self.credentials["default"]
 
 
 class Config(BaseModel):
     autotab_api_key: Optional[str]
-    default_email: str
     credentials: Dict[str, SiteCredentials]
+    google_credentials: GoogleCredentials 
     chrome_binary_location: str
     environment: str
 
@@ -24,12 +46,18 @@ class Config(BaseModel):
         with open(path, "r") as config_file:
             config = yaml.safe_load(config_file)
             _credentials = {}
-            for creds in config.get("credentials", []):
+            for domain, creds in config.get("credentials", {}).items():
                 if "login_url" not in creds:
-                    creds["login_url"] = f"https://{creds['domains'][0]}/login"
+                    creds["login_url"] = f"https://{domain}/login"
                 site_creds = SiteCredentials(**creds)
-                for domain in creds["domains"]:
-                    _credentials[domain] = site_creds
+                _credentials[domain] = site_creds
+                for alt in creds["alts"]:
+                    _credentials[alt] = site_creds
+            
+            google_credentials = {}
+            for creds in config.get("google_credentials", []):
+                credentials : SiteCredentials = SiteCredentials(**creds)
+                google_credentials[credentials.name] = credentials
 
             chrome_binary_location = config.get("chrome_binary_location")
             if chrome_binary_location is None:
@@ -41,16 +69,14 @@ class Config(BaseModel):
 
             return cls(
                 autotab_api_key=autotab_api_key,
-                default_email=config["default_email"],
                 credentials=_credentials,
+                google_credentials=GoogleCredentials(credentials=google_credentials),
                 chrome_binary_location=config.get("chrome_binary_location"),
                 environment=config.get("environment", "prod"),
             )
 
     def get_site_credentials(self, domain: str) -> SiteCredentials:
-        credentials = self.credentials[domain].model_copy()
-        if not credentials.email:
-            credentials.email = self.default_email
+        credentials = self.credentials[domain].copy()
         return credentials
 
 

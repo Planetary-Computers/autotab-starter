@@ -4,7 +4,7 @@ from selenium.webdriver.common.keys import Keys  # noqa: F401
 from selenium.webdriver.support import expected_conditions as EC  # noqa: F401
 from selenium.webdriver.support.ui import WebDriverWait  # noqa: F401
 
-from utils.auth import google_login
+from utils.auth import google_login, login
 from utils.driver import get_driver
 
 
@@ -13,7 +13,8 @@ def main():
 
     # Update this with e.g. logins to sites you want your
     # agent to always have access to
-    google_login(driver)
+    # Ex. google_login(driver)
+    # Ex. login(driver, "https://notion.so/")
 
     # Agent code here...
 

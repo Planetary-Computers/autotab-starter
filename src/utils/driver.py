@@ -87,6 +87,7 @@ def get_driver(
     options.add_argument("--enable-webgl")
     options.add_argument("--enable-3d-apis")
     options.add_argument("--enable-clipboard-read-write")
+    options.add_argument("--disable-popup-blocking")
 
     if autotab_ext_path is None:
         options.add_argument("--load-extension=./src/extension/autotab")
