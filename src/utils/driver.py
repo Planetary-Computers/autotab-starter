@@ -4,7 +4,7 @@ from typing import Optional
 
 import pyautogui
 import requests
-import undetected_chromedriver as uc
+import undetected_chromedriver as uc  # type: ignore
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
