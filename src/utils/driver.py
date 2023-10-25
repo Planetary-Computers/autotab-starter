@@ -77,7 +77,7 @@ def open_plugin_and_login(driver: AutotabChromeDriver):
 
 
 def get_driver(
-    autotab_ext_path: Optional[str] = None, record_mode: bool = False
+    autotab_ext_path: Optional[str] = None, record_mode: bool = False, include_ext=True
 ) -> AutotabChromeDriver:
     options = webdriver.ChromeOptions()
     options.add_argument("--no-sandbox")  # Necessary for running
@@ -89,10 +89,11 @@ def get_driver(
     options.add_argument("--enable-clipboard-read-write")
     options.add_argument("--disable-popup-blocking")
 
-    if autotab_ext_path is None:
-        options.add_argument("--load-extension=./src/extension/autotab")
-    else:
-        options.add_argument(f"--load-extension={autotab_ext_path}")
+    if include_ext:
+        if autotab_ext_path is None:
+            options.add_argument("--load-extension=./src/extension/autotab")
+        else:
+            options.add_argument(f"--load-extension={autotab_ext_path}")
 
     options.add_argument("--allow-running-insecure-content")
     options.add_argument("--disable-web-security")
