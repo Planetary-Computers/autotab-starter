@@ -60,4 +60,4 @@ The first time an agent logs into Google, it may require 2FA depending on your s
 
 This repository is provided as-is, with no guarantees. Before using any code, please review it thoroughly. If considering a scraper, familiarize yourself with the target website's guidelines and Terms of Service. Avoid any unauthorized or illegal activities. We hold no responsibility for any potential issues or outcomes.
 
-> Note: By default autotab logs user data including the application state, DOM and model responses for recorded events while running `autotab record`. You can turn off state and DOM logging by going to [Settings](https://www.autotab.com/dashboard/settings) to turn off state and DOM logging.
+> Note: By default autotab logs user data including the application state, DOM and model responses for recorded events while running `autotab record`. You can disable state and DOM logging by going to [Settings](https://www.autotab.com/dashboard/settings).
