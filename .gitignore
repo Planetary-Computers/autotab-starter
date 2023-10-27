@@ -3,6 +3,11 @@
 .autotab.yaml
 google_cookies.json
 .mypy_cache/**
+src/extension/autotab/
+src/extension/autotab/**
+src/extension/.autotab/
+src/extension/.autotab/**
+
 # Remove this if you want to track your agents with git
 agents/**
 
