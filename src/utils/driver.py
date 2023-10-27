@@ -10,6 +10,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 
 from utils.config import config
+from extension import load_extension
 
 
 class AutotabChromeDriver(uc.Chrome):
@@ -90,6 +91,7 @@ def get_driver(
     options.add_argument("--disable-popup-blocking")
 
     if autotab_ext_path is None:
+        load_extension()
         options.add_argument("--load-extension=./src/extension/autotab")
     else:
         options.add_argument(f"--load-extension={autotab_ext_path}")
@@ -98,9 +100,7 @@ def get_driver(
     options.add_argument("--disable-web-security")
     options.add_argument(f"--user-data-dir={mkdtemp()}")
     options.binary_location = config.chrome_binary_location
-
     driver = AutotabChromeDriver(options=options)
-
     if record_mode:
         open_plugin_and_login(driver)
 

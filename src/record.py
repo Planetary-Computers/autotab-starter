@@ -11,7 +11,6 @@ def record(agent_name: str, autotab_ext_path: Optional[str] = None):
 
     if os.path.exists(f"agents/{agent_name}.py") and config.environment != "local":
         raise Exception(f"Agent with name {agent_name} already exists")
-
     driver = get_driver(  # noqa: F841
         autotab_ext_path=autotab_ext_path,
         record_mode=True,
