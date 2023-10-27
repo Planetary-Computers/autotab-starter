@@ -10,6 +10,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 
 from utils.config import config
+from extension import load_extension
 
 
 class AutotabChromeDriver(uc.Chrome):
@@ -32,7 +33,6 @@ def open_plugin(driver: AutotabChromeDriver):
     driver.execute_script("document.activeElement.blur();")
     pyautogui.press("esc")
     pyautogui.hotkey("command", "shift", "y", interval=0.05)  # mypy: ignore
-    time.sleep(1.5)
 
 
 def open_plugin_and_login(driver: AutotabChromeDriver):
@@ -59,9 +59,8 @@ def open_plugin_and_login(driver: AutotabChromeDriver):
         del cookie["key"]
         driver.add_cookie(cookie)
 
-        open_plugin(driver)
-
         driver.get("https://www.google.com")
+        open_plugin(driver)
     else:
         print("No autotab API key found, heading to autotab.com to sign up")
 
@@ -90,6 +89,7 @@ def get_driver(
     options.add_argument("--disable-popup-blocking")
 
     if autotab_ext_path is None:
+        load_extension()
         options.add_argument("--load-extension=./src/extension/autotab")
     else:
         options.add_argument(f"--load-extension={autotab_ext_path}")
@@ -98,9 +98,7 @@ def get_driver(
     options.add_argument("--disable-web-security")
     options.add_argument(f"--user-data-dir={mkdtemp()}")
     options.binary_location = config.chrome_binary_location
-
     driver = AutotabChromeDriver(options=options)
-
     if record_mode:
         open_plugin_and_login(driver)
 
