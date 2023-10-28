@@ -33,7 +33,6 @@ def open_plugin(driver: AutotabChromeDriver):
     driver.execute_script("document.activeElement.blur();")
     pyautogui.press("esc")
     pyautogui.hotkey("command", "shift", "y", interval=0.05)  # mypy: ignore
-    time.sleep(1.5)
 
 
 def open_plugin_and_login(driver: AutotabChromeDriver):
@@ -60,9 +59,8 @@ def open_plugin_and_login(driver: AutotabChromeDriver):
         del cookie["key"]
         driver.add_cookie(cookie)
 
-        open_plugin(driver)
-
         driver.get("https://www.google.com")
+        open_plugin(driver)
     else:
         print("No autotab API key found, heading to autotab.com to sign up")
 

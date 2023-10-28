@@ -5,12 +5,20 @@ from utils.config import config
 from utils.driver import get_driver
 
 
+def _is_blank_agent(agent_name: str) -> bool:
+    with open(f"agents/{agent_name}.py", "r") as agent_file:
+        agent_data = agent_file.read()
+    with open("src/template.py", "r") as template_file:
+        template_data = template_file.read()
+    return agent_data == template_data
+            
 def record(agent_name: str, autotab_ext_path: Optional[str] = None):
     if not os.path.exists("agents"):
         os.makedirs("agents")
 
     if os.path.exists(f"agents/{agent_name}.py") and config.environment != "local":
-        raise Exception(f"Agent with name {agent_name} already exists")
+        if not _is_blank_agent(agent_name=agent_name):
+            raise Exception(f"Agent with name {agent_name} already exists")
     driver = get_driver(  # noqa: F841
         autotab_ext_path=autotab_ext_path,
         record_mode=True,
