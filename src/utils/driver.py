@@ -87,12 +87,13 @@ def get_driver(
     options.add_argument("--enable-3d-apis")
     options.add_argument("--enable-clipboard-read-write")
     options.add_argument("--disable-popup-blocking")
-
-    if autotab_ext_path is None:
-        load_extension()
-        options.add_argument("--load-extension=./src/extension/autotab")
-    else:
-        options.add_argument(f"--load-extension={autotab_ext_path}")
+    
+    if include_ext:
+        if autotab_ext_path is None:
+            load_extension()
+            options.add_argument("--load-extension=./src/extension/autotab")
+        else:
+            options.add_argument(f"--load-extension={autotab_ext_path}")
 
     options.add_argument("--allow-running-insecure-content")
     options.add_argument("--disable-web-security")
