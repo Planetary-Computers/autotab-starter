@@ -6,3 +6,4 @@ types-requests==2.31.*
 types-pyyaml==6.0.*
 types-PyAutoGUI==0.9.*
 undetected-chromedriver==3.*
+types-tqdm
