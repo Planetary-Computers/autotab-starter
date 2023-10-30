@@ -60,6 +60,8 @@ def open_plugin_and_login(driver: AutotabChromeDriver):
         driver.add_cookie(cookie)
 
         driver.get("https://www.google.com")
+        time.sleep(2) # wait for service worker reset triggered by uc chrome
+        
         open_plugin(driver)
     else:
         print("No autotab API key found, heading to autotab.com to sign up")
