@@ -51,7 +51,7 @@ class Config(BaseModel):
                     creds["login_url"] = f"https://{domain}/login"
                 site_creds = SiteCredentials(**creds)
                 _credentials[domain] = site_creds
-                for alt in creds["alts"]:
+                for alt in creds.get("alts", []):
                     _credentials[alt] = site_creds
 
             google_credentials = {}
