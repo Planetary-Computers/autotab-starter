@@ -9,8 +9,8 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 
-from utils.config import config
 from extension import load_extension
+from utils.config import config
 
 
 class AutotabChromeDriver(uc.Chrome):

@@ -12,7 +12,8 @@ def _is_blank_agent(agent_name: str) -> bool:
     with open("src/template.py", "r") as template_file:
         template_data = template_file.read()
     return agent_data == template_data
-            
+
+
 def record(agent_name: str, autotab_ext_path: Optional[str] = None):
     if not os.path.exists("agents"):
         os.makedirs("agents")
