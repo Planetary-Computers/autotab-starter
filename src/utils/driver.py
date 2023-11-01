@@ -28,55 +28,55 @@ class AutotabChromeDriver(uc.Chrome):
             raise e
 
 
-def open_plugin(driver: AutotabChromeDriver):
-    print("Opening plugin sidepanel")
-    driver.execute_script("document.activeElement.blur();")
-    pyautogui.press("esc")
-    pyautogui.hotkey("command", "shift", "y", interval=0.05)  # mypy: ignore
+    def open_plugin(self):
+        print("Opening plugin sidepanel")
+        self.execute_script("document.activeElement.blur();")
+        pyautogui.press("esc")
+        pyautogui.hotkey("command", "shift", "y", interval=0.05)  # mypy: ignore
 
 
-def open_plugin_and_login(driver: AutotabChromeDriver):
-    if config.autotab_api_key is not None:
-        backend_url = (
-            "http://localhost:8000"
-            if config.environment == "local"
-            else "https://api.autotab.com"
-        )
-        driver.get(f"{backend_url}/auth/signin-api-key-page")
-        response = requests.post(
-            f"{backend_url}/auth/signin-api-key",
-            json={"api_key": config.autotab_api_key},
-        )
-        cookie = response.json()
-        if response.status_code != 200:
-            if response.status_code == 401:
-                raise Exception("Invalid API key")
-            else:
-                raise Exception(
-                    f"Error {response.status_code} from backend while logging you in with your API key: {response.text}"
-                )
-        cookie["name"] = cookie["key"]
-        del cookie["key"]
-        driver.add_cookie(cookie)
+    def open_plugin_and_login(self):
+        if config.autotab_api_key is not None:
+            backend_url = (
+                "http://localhost:8000"
+                if config.environment == "local"
+                else "https://api.autotab.com"
+            )
+            self.get(f"{backend_url}/auth/signin-api-key-page")
+            response = requests.post(
+                f"{backend_url}/auth/signin-api-key",
+                json={"api_key": config.autotab_api_key},
+            )
+            cookie = response.json()
+            if response.status_code != 200:
+                if response.status_code == 401:
+                    raise Exception("Invalid API key")
+                else:
+                    raise Exception(
+                        f"Error {response.status_code} from backend while logging you in with your API key: {response.text}"
+                    )
+            cookie["name"] = cookie["key"]
+            del cookie["key"]
+            self.add_cookie(cookie)
 
-        driver.get("https://www.google.com")
-        open_plugin(driver)
-    else:
-        print("No autotab API key found, heading to autotab.com to sign up")
+            self.get("https://www.google.com")
+            self.open_plugin()
+        else:
+            print("No autotab API key found, heading to autotab.com to sign up")
 
-        url = (
-            "http://localhost:3000/dashboard"
-            if config.environment == "local"
-            else "https://autotab.com/dashboard"
-        )
-        driver.get(url)
-        time.sleep(0.5)
+            url = (
+                "http://localhost:3000/dashboard"
+                if config.environment == "local"
+                else "https://autotab.com/dashboard"
+            )
+            self.get(url)
+            time.sleep(0.5)
 
-        open_plugin(driver)
+            self.open_plugin()
 
 
 def get_driver(
-    autotab_ext_path: Optional[str] = None, record_mode: bool = False, include_ext=True
+    autotab_ext_path: Optional[str] = None, include_ext=True
 ) -> AutotabChromeDriver:
     options = webdriver.ChromeOptions()
     options.add_argument("--no-sandbox")  # Necessary for running
@@ -100,7 +100,29 @@ def get_driver(
     options.add_argument(f"--user-data-dir={mkdtemp()}")
     options.binary_location = config.chrome_binary_location
     driver = AutotabChromeDriver(options=options)
-    if record_mode:
-        open_plugin_and_login(driver)
+
+    return driver
+
+def get_mirror(
+    width: int,
+    height: int,
+) -> AutotabChromeDriver:
+    options = webdriver.ChromeOptions()
+    options.add_argument("--no-sandbox")  # Necessary for running
+    options.add_argument(
+        "--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36"
+    )
+    options.add_argument("--enable-webgl")
+    options.add_argument("--enable-3d-apis")
+    options.add_argument("--enable-clipboard-read-write")
+    options.add_argument("--disable-popup-blocking")
+    options.add_argument("--headless")
+    options.add_argument(f"--window-size={width},{height}")
+
+    options.add_argument("--allow-running-insecure-content")
+    options.add_argument("--disable-web-security")
+    options.add_argument(f"--user-data-dir={mkdtemp()}")
+    options.binary_location = config.chrome_binary_location
+    driver = AutotabChromeDriver(options=options)
 
     return driver

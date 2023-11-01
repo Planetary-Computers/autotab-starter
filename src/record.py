@@ -1,10 +1,11 @@
 import os
 from typing import Optional
 
-from server.server import run_server
 from utils.config import config
-from utils.driver import get_driver
+from utils.driver import get_driver, get_mirror
+from utils.mirror import mirror
 
+from multiprocessing import Process
 
 def _is_blank_agent(agent_name: str) -> bool:
     with open(f"agents/{agent_name}.py", "r") as agent_file:
@@ -21,11 +22,19 @@ def record(agent_name: str, autotab_ext_path: Optional[str] = None):
     if os.path.exists(f"agents/{agent_name}.py") and config.environment != "local":
         if not _is_blank_agent(agent_name=agent_name):
             raise Exception(f"Agent with name {agent_name} already exists")
+    
+    
+    
+    # Create a process that runs mirror(mirror_driver)
+    p = Process(target=mirror)
+    # Start the process
+    p.start()
     driver = get_driver(  # noqa: F841
         autotab_ext_path=autotab_ext_path,
-        record_mode=True,
     )
-    run_server(driver)
+    driver.open_plugin_and_login()
+    
+    
 
     # Need to keep a reference to the driver so that it doesn't get garbage collected
     with open("src/template.py", "r") as file:

@@ -29,6 +29,19 @@ from selenium.webdriver.support import expected_conditions as EC  # noqa: F401
 from selenium.webdriver.support.ui import WebDriverWait  # noqa: F401
 """
         self.shell.run_cell(header)
+        
+    def reset(self):
+        if self.driver:
+            # Open a new tab
+            self.driver.execute_script("window.open('');")
+            # Switch to the new tab (it's the last one)
+            self.driver.switch_to.window(self.driver.window_handles[-1])
+            # Close all other tabs
+            while len(self.driver.window_handles) > 1:
+                self.driver.switch_to.window(self.driver.window_handles[0])
+                self.driver.close()
+            # Switch back to the remaining tab
+            self.driver.switch_to.window(self.driver.window_handles[0])
 
     def run(self, code: str | List[str]):
         if isinstance(code, list):
@@ -49,6 +62,7 @@ class Code(BaseModel):
 
 @app.post("/run_all")
 def run_all(items: List[Code]):
+    session.reset()
     session.run([item.code for item in items])
     return {"message": "Code executed successfully"}
 
@@ -60,8 +74,8 @@ def run_code_block(item: Code):
 
 
 def run_server(driver: AutotabChromeDriver):
-    _driver = get_driver(include_ext=False)
-    session.set_driver(_driver)
+    # _driver = get_driver(include_ext=False)
+    session.set_driver(driver)
     session.start()
     import uvicorn
 
