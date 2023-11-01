@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 
 from server.server import run_server
-from utils.driver import get_mirror
+from utils.driver import get_driver
 
 
 def open_application_window(width: int, height: int):
@@ -36,7 +36,9 @@ def mirror(
     width: int = 200,
     height: int = 50,
 ):
-    driver = get_mirror(width=200, height=50)
+    width = 200
+    height = 50
+    driver = get_driver(headless=True, window_size=(width, height))
     window = open_application_window(200, 50)
     server_thread = threading.Thread(target=run_server, args=(driver,))
     server_thread.start()

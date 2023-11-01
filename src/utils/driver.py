@@ -1,6 +1,7 @@
+import subprocess
 import time
 from tempfile import mkdtemp
-from typing import Optional
+from typing import Optional, Tuple
 
 import pyautogui
 import requests
@@ -74,7 +75,10 @@ class AutotabChromeDriver(uc.Chrome):
 
 
 def get_driver(
-    autotab_ext_path: Optional[str] = None, include_ext=True
+    autotab_ext_path: Optional[str] = None,
+    include_ext=True,
+    headless: bool = False,
+    window_size: Optional[Tuple[int, int]] = None,
 ) -> AutotabChromeDriver:
     options = webdriver.ChromeOptions()
     options.add_argument("--no-sandbox")  # Necessary for running
@@ -93,35 +97,24 @@ def get_driver(
         else:
             options.add_argument(f"--load-extension={autotab_ext_path}")
 
-    options.add_argument("--allow-running-insecure-content")
-    options.add_argument("--disable-web-security")
-    options.add_argument(f"--user-data-dir={mkdtemp()}")
-    options.binary_location = config.chrome_binary_location
-    driver = AutotabChromeDriver(options=options)
+    if window_size is not None:
+        width, height = window_size
+        options.add_argument(f"--window-size={width},{height}")
 
-    return driver
-
-
-def get_mirror(
-    width: int,
-    height: int,
-) -> AutotabChromeDriver:
-    options = webdriver.ChromeOptions()
-    options.add_argument("--no-sandbox")  # Necessary for running
-    options.add_argument(
-        "--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36"
-    )
-    options.add_argument("--enable-webgl")
-    options.add_argument("--enable-3d-apis")
-    options.add_argument("--enable-clipboard-read-write")
-    options.add_argument("--disable-popup-blocking")
-    options.add_argument("--headless")
-    options.add_argument(f"--window-size={width},{height}")
+    if headless:
+        options.add_argument("--headless")
 
     options.add_argument("--allow-running-insecure-content")
     options.add_argument("--disable-web-security")
     options.add_argument(f"--user-data-dir={mkdtemp()}")
     options.binary_location = config.chrome_binary_location
-    driver = AutotabChromeDriver(options=options)
+    try:
+        version_output = subprocess.check_output(["chromedriver", "--version"]).decode(
+            "utf-8"
+        )
+        version_main = int(version_output.split(" ")[1].split(".")[0])
+    except Exception:
+        version_main = None
+    driver = AutotabChromeDriver(options=options, version_main=version_main)
 
     return driver
