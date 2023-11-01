@@ -1,8 +1,11 @@
+import threading
+
 import cv2
 import numpy as np
-from utils.driver import get_mirror, AutotabChromeDriver
+
 from server.server import run_server
-import threading
+from utils.driver import get_mirror
+
 
 def open_application_window(width: int, height: int):
     # Create a named window
@@ -10,6 +13,7 @@ def open_application_window(width: int, height: int):
     # Resize the window
     cv2.resizeWindow("Autotab Mirror", width, height)
     return "Autotab Mirror"
+
 
 def stream_video(driver, window):
     while True:
@@ -23,19 +27,21 @@ def stream_video(driver, window):
         # Display the resulting frame in the application window
         cv2.imshow(window, img_arr)
         # Break the loop on 'q' key press
-        if cv2.waitKey(1) & 0xFF == ord('q'):
+        if cv2.waitKey(1) & 0xFF == ord("q"):
             break
-            
+
+
 def mirror(
     # driver: AutotabChromeDriver
     width: int = 200,
-    height: int = 50
+    height: int = 50,
 ):
     driver = get_mirror(width=200, height=50)
     window = open_application_window(200, 50)
     server_thread = threading.Thread(target=run_server, args=(driver,))
     server_thread.start()
     stream_video(driver, window)
+
 
 def close():
     cv2.destroyAllWindows()

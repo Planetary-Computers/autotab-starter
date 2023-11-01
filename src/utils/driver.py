@@ -27,13 +27,11 @@ class AutotabChromeDriver(uc.Chrome):
             breakpoint()
             raise e
 
-
     def open_plugin(self):
         print("Opening plugin sidepanel")
         self.execute_script("document.activeElement.blur();")
         pyautogui.press("esc")
         pyautogui.hotkey("command", "shift", "y", interval=0.05)  # mypy: ignore
-
 
     def open_plugin_and_login(self):
         if config.autotab_api_key is not None:
@@ -87,7 +85,7 @@ def get_driver(
     options.add_argument("--enable-3d-apis")
     options.add_argument("--enable-clipboard-read-write")
     options.add_argument("--disable-popup-blocking")
-    
+
     if include_ext:
         if autotab_ext_path is None:
             load_extension()
@@ -102,6 +100,7 @@ def get_driver(
     driver = AutotabChromeDriver(options=options)
 
     return driver
+
 
 def get_mirror(
     width: int,

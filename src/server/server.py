@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from IPython.core.interactiveshell import InteractiveShell
 from pydantic import BaseModel
 
-from utils.driver import AutotabChromeDriver, get_driver
+from utils.driver import AutotabChromeDriver
 
 app = FastAPI()
 
@@ -29,7 +29,7 @@ from selenium.webdriver.support import expected_conditions as EC  # noqa: F401
 from selenium.webdriver.support.ui import WebDriverWait  # noqa: F401
 """
         self.shell.run_cell(header)
-        
+
     def reset(self):
         if self.driver:
             # Open a new tab
