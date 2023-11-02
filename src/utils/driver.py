@@ -27,13 +27,11 @@ class AutotabChromeDriver(uc.Chrome):
             breakpoint()
             raise e
 
-
     def open_plugin(self):
         print("Opening plugin sidepanel")
         self.execute_script("document.activeElement.blur();")
         pyautogui.press("esc")
         pyautogui.hotkey("command", "shift", "y", interval=0.05)  # mypy: ignore
-
 
     def open_plugin_and_login(self):
         if config.autotab_api_key is not None:
@@ -76,7 +74,9 @@ class AutotabChromeDriver(uc.Chrome):
 
 
 def get_driver(
-    autotab_ext_path: Optional[str] = None, include_ext=True
+    autotab_ext_path: Optional[str] = None,
+    width: Optional[int] = None,
+    height: Optional[int] = None,
 ) -> AutotabChromeDriver:
     options = webdriver.ChromeOptions()
     options.add_argument("--no-sandbox")  # Necessary for running
@@ -87,13 +87,14 @@ def get_driver(
     options.add_argument("--enable-3d-apis")
     options.add_argument("--enable-clipboard-read-write")
     options.add_argument("--disable-popup-blocking")
-    
-    if include_ext:
-        if autotab_ext_path is None:
-            load_extension()
-            options.add_argument("--load-extension=./src/extension/autotab")
-        else:
-            options.add_argument(f"--load-extension={autotab_ext_path}")
+    if width and height:
+        options.add_argument(f"--window-size={width},{height}")
+
+    if autotab_ext_path is None:
+        load_extension()
+        options.add_argument("--load-extension=./src/extension/autotab")
+    else:
+        options.add_argument(f"--load-extension={autotab_ext_path}")
 
     options.add_argument("--allow-running-insecure-content")
     options.add_argument("--disable-web-security")
@@ -101,9 +102,13 @@ def get_driver(
     options.binary_location = config.chrome_binary_location
     driver = AutotabChromeDriver(options=options)
 
+    if width and height:
+        driver.set_window_size(width, height)
+
     return driver
 
-def get_mirror(
+
+def get_mirror_driver(
     width: int,
     height: int,
 ) -> AutotabChromeDriver:
@@ -124,5 +129,5 @@ def get_mirror(
     options.add_argument(f"--user-data-dir={mkdtemp()}")
     options.binary_location = config.chrome_binary_location
     driver = AutotabChromeDriver(options=options)
-
+    driver.set_window_size(width, height)
     return driver

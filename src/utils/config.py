@@ -40,6 +40,7 @@ class Config(BaseModel):
     google_credentials: GoogleCredentials
     chrome_binary_location: str
     environment: str
+    debug_mode: bool
 
     @classmethod
     def load_from_yaml(cls, path: str):
@@ -73,6 +74,7 @@ class Config(BaseModel):
                 google_credentials=GoogleCredentials(credentials=google_credentials),
                 chrome_binary_location=config.get("chrome_binary_location"),
                 environment=config.get("environment", "prod"),
+                debug_mode=config.get("debug_mode", False),
             )
 
     def get_site_credentials(self, domain: str) -> SiteCredentials:
