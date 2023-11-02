@@ -29,24 +29,21 @@ def record(agent_name: str, autotab_ext_path: Optional[str] = None):
     view_width, _ = get_monitors()[0].width, get_monitors()[0].height
     window_w = 3 / 4
     height_p = 0.65
-    width = int(view_width * window_w)
-    height = int(width * height_p)
+    window_size = (int(view_width * window_w), int(view_width * window_w * height_p))
     p = Process(
         target=mirror,
         daemon=True,
         kwargs={
-            "driver_width": width,
-            "driver_height": height,
+            "driver_window_size": window_size,
             "window_scaling_factor": (1 - window_w) / window_w,
-            "left": width,
+            "left": window_size[0],
         },
     )
     p.start()
 
     driver = get_driver(  # noqa: F841
         autotab_ext_path=autotab_ext_path,
-        width=width,
-        height=height,
+        window_size=window_size,
     )
     driver.set_window_position(0, 0)
     driver.open_plugin_and_login()

@@ -1,10 +1,11 @@
 import threading
+from typing import Tuple
 
 import cv2
 import numpy as np
 
 from server.server import run_server
-from utils.driver import AutotabChromeDriver, get_mirror_driver
+from utils.driver import AutotabChromeDriver, get_driver
 
 
 def open_application_window(width: int, height: int, left: int):
@@ -45,12 +46,14 @@ def stream_video(driver: AutotabChromeDriver, window_name: str, scaling_factor: 
 
 
 def mirror(
-    driver_width: int,
-    driver_height: int,
+    driver_window_size: Tuple[int, int],
     window_scaling_factor: float,
     left: int = 0,
 ):
-    driver = get_mirror_driver(width=driver_width, height=driver_height)
+    driver = get_driver(
+        include_ext=False, headless=True, window_size=driver_window_size
+    )
+    driver_width, driver_height = driver_window_size
     window = open_application_window(
         int(driver_width * window_scaling_factor),
         int(driver_height * window_scaling_factor),

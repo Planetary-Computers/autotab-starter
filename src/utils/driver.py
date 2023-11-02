@@ -1,6 +1,6 @@
 import time
 from tempfile import mkdtemp
-from typing import Optional
+from typing import Optional, Tuple
 
 import pyautogui
 import requests
@@ -75,8 +75,9 @@ class AutotabChromeDriver(uc.Chrome):
 
 def get_driver(
     autotab_ext_path: Optional[str] = None,
-    width: Optional[int] = None,
-    height: Optional[int] = None,
+    include_ext: bool = True,
+    headless: bool = False,
+    window_size: Optional[Tuple[int, int]] = None,
 ) -> AutotabChromeDriver:
     options = webdriver.ChromeOptions()
     options.add_argument("--no-sandbox")  # Necessary for running
@@ -87,22 +88,30 @@ def get_driver(
     options.add_argument("--enable-3d-apis")
     options.add_argument("--enable-clipboard-read-write")
     options.add_argument("--disable-popup-blocking")
-    if width and height:
+
+    if include_ext:
+        if autotab_ext_path is None:
+            load_extension()
+            options.add_argument("--load-extension=./src/extension/autotab")
+        else:
+            options.add_argument(f"--load-extension={autotab_ext_path}")
+
+    if window_size is not None:
+        width, height = window_size
         options.add_argument(f"--window-size={width},{height}")
 
-    if autotab_ext_path is None:
-        load_extension()
-        options.add_argument("--load-extension=./src/extension/autotab")
-    else:
-        options.add_argument(f"--load-extension={autotab_ext_path}")
+    if headless:
+        options.add_argument("--headless")
 
     options.add_argument("--allow-running-insecure-content")
     options.add_argument("--disable-web-security")
     options.add_argument(f"--user-data-dir={mkdtemp()}")
     options.binary_location = config.chrome_binary_location
+
     driver = AutotabChromeDriver(options=options)
 
-    if width and height:
+    if window_size is not None:
+        width, height = window_size
         driver.set_window_size(width, height)
 
     return driver
