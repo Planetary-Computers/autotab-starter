@@ -115,28 +115,3 @@ def get_driver(
         driver.set_window_size(width, height)
 
     return driver
-
-
-def get_mirror_driver(
-    width: int,
-    height: int,
-) -> AutotabChromeDriver:
-    options = webdriver.ChromeOptions()
-    options.add_argument("--no-sandbox")  # Necessary for running
-    options.add_argument(
-        "--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36"
-    )
-    options.add_argument("--enable-webgl")
-    options.add_argument("--enable-3d-apis")
-    options.add_argument("--enable-clipboard-read-write")
-    options.add_argument("--disable-popup-blocking")
-    options.add_argument("--headless")
-    options.add_argument(f"--window-size={width},{height}")
-
-    options.add_argument("--allow-running-insecure-content")
-    options.add_argument("--disable-web-security")
-    options.add_argument(f"--user-data-dir={mkdtemp()}")
-    options.binary_location = config.chrome_binary_location
-    driver = AutotabChromeDriver(options=options)
-    driver.set_window_size(width, height)
-    return driver
