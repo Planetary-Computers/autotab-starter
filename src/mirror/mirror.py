@@ -59,7 +59,6 @@ def mirror(
     window_scaling_factor: float,
     left: int = 0,
 ):
-    print("scaling factor:", window_scaling_factor)
     driver = get_driver(
         include_ext=False, headless=True, window_size=driver_window_size
     )
