@@ -1,6 +1,6 @@
 import time
 from tempfile import mkdtemp
-from typing import Optional
+from typing import Optional, Tuple
 
 import pyautogui
 import requests
@@ -27,56 +27,57 @@ class AutotabChromeDriver(uc.Chrome):
             breakpoint()
             raise e
 
+    def open_plugin(self):
+        print("Opening plugin sidepanel")
+        self.execute_script("document.activeElement.blur();")
+        pyautogui.press("esc")
+        pyautogui.hotkey("command", "shift", "y", interval=0.05)  # mypy: ignore
 
-def open_plugin(driver: AutotabChromeDriver):
-    print("Opening plugin sidepanel")
-    driver.execute_script("document.activeElement.blur();")
-    pyautogui.press("esc")
-    pyautogui.hotkey("command", "shift", "y", interval=0.05)  # mypy: ignore
+    def open_plugin_and_login(self):
+        if config.autotab_api_key is not None:
+            backend_url = (
+                "http://localhost:8000"
+                if config.environment == "local"
+                else "https://api.autotab.com"
+            )
+            self.get(f"{backend_url}/auth/signin-api-key-page")
+            response = requests.post(
+                f"{backend_url}/auth/signin-api-key",
+                json={"api_key": config.autotab_api_key},
+            )
+            cookie = response.json()
+            if response.status_code != 200:
+                if response.status_code == 401:
+                    raise Exception("Invalid API key")
+                else:
+                    raise Exception(
+                        f"Error {response.status_code} from backend while logging you in with your API key: {response.text}"
+                    )
+            cookie["name"] = cookie["key"]
+            del cookie["key"]
+            self.add_cookie(cookie)
 
+            self.get("https://www.google.com")
+            self.open_plugin()
+        else:
+            print("No autotab API key found, heading to autotab.com to sign up")
 
-def open_plugin_and_login(driver: AutotabChromeDriver):
-    if config.autotab_api_key is not None:
-        backend_url = (
-            "http://localhost:8000"
-            if config.environment == "local"
-            else "https://api.autotab.com"
-        )
-        driver.get(f"{backend_url}/auth/signin-api-key-page")
-        response = requests.post(
-            f"{backend_url}/auth/signin-api-key",
-            json={"api_key": config.autotab_api_key},
-        )
-        cookie = response.json()
-        if response.status_code != 200:
-            if response.status_code == 401:
-                raise Exception("Invalid API key")
-            else:
-                raise Exception(
-                    f"Error {response.status_code} from backend while logging you in with your API key: {response.text}"
-                )
-        cookie["name"] = cookie["key"]
-        del cookie["key"]
-        driver.add_cookie(cookie)
+            url = (
+                "http://localhost:3000/dashboard"
+                if config.environment == "local"
+                else "https://autotab.com/dashboard"
+            )
+            self.get(url)
+            time.sleep(0.5)
 
-        driver.get("https://www.google.com")
-        open_plugin(driver)
-    else:
-        print("No autotab API key found, heading to autotab.com to sign up")
-
-        url = (
-            "http://localhost:3000/dashboard"
-            if config.environment == "local"
-            else "https://autotab.com/dashboard"
-        )
-        driver.get(url)
-        time.sleep(0.5)
-
-        open_plugin(driver)
+            self.open_plugin()
 
 
 def get_driver(
-    autotab_ext_path: Optional[str] = None, record_mode: bool = False
+    autotab_ext_path: Optional[str] = None,
+    include_ext: bool = True,
+    headless: bool = False,
+    window_size: Optional[Tuple[int, int]] = None,
 ) -> AutotabChromeDriver:
     options = webdriver.ChromeOptions()
     options.add_argument("--no-sandbox")  # Necessary for running
@@ -88,18 +89,29 @@ def get_driver(
     options.add_argument("--enable-clipboard-read-write")
     options.add_argument("--disable-popup-blocking")
 
-    if autotab_ext_path is None:
-        load_extension()
-        options.add_argument("--load-extension=./src/extension/autotab")
-    else:
-        options.add_argument(f"--load-extension={autotab_ext_path}")
+    if include_ext:
+        if autotab_ext_path is None:
+            load_extension()
+            options.add_argument("--load-extension=./src/extension/autotab")
+        else:
+            options.add_argument(f"--load-extension={autotab_ext_path}")
+
+    if window_size is not None:
+        width, height = window_size
+        options.add_argument(f"--window-size={width},{height}")
+
+    if headless:
+        options.add_argument("--headless")
 
     options.add_argument("--allow-running-insecure-content")
     options.add_argument("--disable-web-security")
     options.add_argument(f"--user-data-dir={mkdtemp()}")
     options.binary_location = config.chrome_binary_location
+
     driver = AutotabChromeDriver(options=options)
-    if record_mode:
-        open_plugin_and_login(driver)
+
+    if window_size is not None:
+        width, height = window_size
+        driver.set_window_size(width, height)
 
     return driver

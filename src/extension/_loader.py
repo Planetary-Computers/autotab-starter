@@ -58,11 +58,14 @@ def should_update():
     xml_version = root.find(".//ns:app/ns:updatecheck", namespaces).get("version")
 
     # Load the local JSON file
-    with open("src/extension/autotab/manifest.json", "r") as f:
-        json_content = json.load(f)
-    json_version = json_content["version"]
-    # Compare versions
-    return semver.compare(xml_version, json_version) > 0
+    try:
+        with open("src/extension/autotab/manifest.json", "r") as f:
+            json_content = json.load(f)
+        json_version = json_content["version"]
+        # Compare versions
+        return semver.compare(xml_version, json_version) > 0
+    except FileNotFoundError:
+        return True
 
 
 def load_extension():
