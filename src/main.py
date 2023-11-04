@@ -22,7 +22,11 @@ def main():
     args = parser.parse_args()
 
     if args.command == "record":
-        record(args.agent, autotab_ext_path=args.autotab_ext_path, mirror_disabled=args.mirror_disabled)
+        record(
+            args.agent,
+            autotab_ext_path=args.autotab_ext_path,
+            mirror_disabled=args.mirror_disabled,
+        )
     elif args.command == "play":
         play(args.agent)
 

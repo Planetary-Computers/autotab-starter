@@ -7,18 +7,25 @@ import numpy as np
 from server.server import run_server
 from utils.driver import AutotabChromeDriver, get_driver
 
+MIRROR_WINDOW_NAME = "Autotab Bot"
+
 
 def open_application_window(width: int, height: int, left: int):
     # Create a named window
-    cv2.namedWindow("Autotab Mirror", cv2.WINDOW_NORMAL)
+    cv2.namedWindow(MIRROR_WINDOW_NAME, cv2.WINDOW_NORMAL)
     # Resize the window
-    cv2.resizeWindow("Autotab Mirror", width, height)
+    cv2.resizeWindow(MIRROR_WINDOW_NAME, width, height)
     # Position the window
-    cv2.moveWindow("Autotab Mirror", left, 0)
-    return "Autotab Mirror"
+    cv2.moveWindow(MIRROR_WINDOW_NAME, left, 0)
+    return MIRROR_WINDOW_NAME
 
 
-def stream_video(driver: AutotabChromeDriver, window_name: str, scaling_factor: float):
+def stream_video(
+    driver: AutotabChromeDriver,
+    window_name: str,
+    driver_width: int,
+    scaling_factor: float,
+):
     while True:
         try:
             # Capture frame-by-frame from the browser
@@ -26,9 +33,11 @@ def stream_video(driver: AutotabChromeDriver, window_name: str, scaling_factor: 
             # Convert the PNG binary data to an image array
             frame_arr = np.frombuffer(frame, np.uint8)
             img_arr = cv2.imdecode(frame_arr, cv2.IMREAD_COLOR)
-
+            # Get the pixel width of the image
+            pixel_width = img_arr.shape[1]
+            rescale_factor = driver_width / pixel_width
             # Resize the image
-            scale_percent = scaling_factor * 100
+            scale_percent = scaling_factor * rescale_factor * 100
             width = int(img_arr.shape[1] * scale_percent / 100)
             height = int(img_arr.shape[0] * scale_percent / 100)
             dim = (width, height)
@@ -50,6 +59,7 @@ def mirror(
     window_scaling_factor: float,
     left: int = 0,
 ):
+    print("scaling factor:", window_scaling_factor)
     driver = get_driver(
         include_ext=False, headless=True, window_size=driver_window_size
     )
@@ -61,7 +71,7 @@ def mirror(
     )
     server_thread = threading.Thread(target=run_server, args=(driver,))
     server_thread.start()
-    stream_video(driver, window, window_scaling_factor)
+    stream_video(driver, window, driver_width, window_scaling_factor)
 
 
 def close():

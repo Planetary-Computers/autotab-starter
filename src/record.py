@@ -18,7 +18,11 @@ def _is_blank_agent(agent_name: str) -> bool:
     return agent_data == template_data
 
 
-def record(agent_name: str, autotab_ext_path: Optional[str] = None, mirror_disabled: bool = False):
+def record(
+    agent_name: str,
+    autotab_ext_path: Optional[str] = None,
+    mirror_disabled: bool = False,
+):
     if not os.path.exists("agents"):
         os.makedirs("agents")
 
@@ -41,7 +45,9 @@ def record(agent_name: str, autotab_ext_path: Optional[str] = None, mirror_disab
             },
         )
         p.start()
-        time.sleep(2) # Wait for the mirror to open so we don't lose focus when opening the plugin
+        time.sleep(
+            2
+        )  # Wait for the mirror to open so we don't lose focus when opening the plugin
 
     driver = get_driver(  # noqa: F841
         autotab_ext_path=autotab_ext_path,
