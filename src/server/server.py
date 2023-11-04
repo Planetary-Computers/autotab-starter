@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 
 from fastapi import FastAPI
 from IPython.core.interactiveshell import InteractiveShell
@@ -13,6 +13,7 @@ class Session(BaseModel):
     shell: InteractiveShell
     cells: List[str] = []
     driver: Optional[AutotabChromeDriver] = None
+    data: Optional[Dict[str, Any]] = None
 
     class Config:
         arbitrary_types_allowed = True
@@ -72,9 +73,15 @@ def run_code_block(item: Code):
     session.run(item.code)
     return {"message": "Code executed successfully"}
 
+@app.get("/data")
+def get_data():
+    return session.data
 
-def run_server(driver: AutotabChromeDriver):
+
+
+def run_server(driver: AutotabChromeDriver, data: Optional[Dict[str, Any]] = None):
     session.set_driver(driver)
+    session.data = data
     session.start()
     import uvicorn
 

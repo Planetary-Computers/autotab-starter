@@ -2,7 +2,7 @@ import os
 from typing import Optional
 
 
-def play(agent_name: Optional[str] = None):
+def play(agent_name: Optional[str] = None, data_filepath: Optional[str] = None):
     if agent_name is None:
         agent_files = os.listdir("agents")
         if len(agent_files) == 0:
@@ -19,7 +19,7 @@ def play(agent_name: Optional[str] = None):
     else:
         agent_file = f"{agent_name}.py"
 
-    os.system(f"python agents/{agent_file}")
+    os.system(f"python agents/{agent_file} --data={data_filepath}")
 
 
 if __name__ == "__main__":
