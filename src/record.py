@@ -22,6 +22,7 @@ def record(
     agent_name: str,
     autotab_ext_path: Optional[str] = None,
     mirror_disabled: bool = False,
+    data_filepath: Optional[str] = None,
 ):
     if not os.path.exists("agents"):
         os.makedirs("agents")
@@ -42,6 +43,7 @@ def record(
                 "driver_window_size": window_size,
                 "window_scaling_factor": (1 - window_w) / window_w,
                 "left": window_size[0],
+                "data_filepath": data_filepath,
             },
         )
         p.start()

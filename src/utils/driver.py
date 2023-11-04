@@ -1,5 +1,4 @@
 import time
-import json
 from tempfile import mkdtemp
 from typing import Optional, Tuple
 

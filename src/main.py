@@ -8,6 +8,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("command", help="Command to run", choices=["record", "play"])
     parser.add_argument("--agent", help="Agent to run", default="agent")
+    parser.add_argument("--data", help="Specify the data file path", default=None)
     # Dev parameter to specify a custom extension path
     parser.add_argument(
         "--autotab-ext-path",
@@ -26,9 +27,10 @@ def main():
             args.agent,
             autotab_ext_path=args.autotab_ext_path,
             mirror_disabled=args.mirror_disabled,
+            data_filepath=args.data,
         )
     elif args.command == "play":
-        play(args.agent)
+        play(args.agent, data_filepath=args.data)
 
 
 if __name__ == "__main__":

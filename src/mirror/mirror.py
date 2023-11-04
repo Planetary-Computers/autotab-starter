@@ -1,5 +1,5 @@
 import threading
-from typing import Tuple
+from typing import Optional, Tuple
 
 import cv2
 import numpy as np
@@ -58,17 +58,25 @@ def mirror(
     driver_window_size: Tuple[int, int],
     window_scaling_factor: float,
     left: int = 0,
+    data_filepath: Optional[str] = None,
 ):
     driver = get_driver(
         include_ext=False, headless=True, window_size=driver_window_size
     )
+
     driver_width, driver_height = driver_window_size
     window = open_application_window(
         int(driver_width * window_scaling_factor),
         int(driver_height * window_scaling_factor),
         left,
     )
-    server_thread = threading.Thread(target=run_server, args=(driver,))
+    server_thread = threading.Thread(
+        target=run_server,
+        args=(
+            driver,
+            data_filepath,
+        ),
+    )
     server_thread.start()
     stream_video(driver, window, driver_width, window_scaling_factor)
 
