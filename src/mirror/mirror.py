@@ -58,7 +58,7 @@ def mirror(
     driver_window_size: Tuple[int, int],
     window_scaling_factor: float,
     left: int = 0,
-    data_filepath: Optional[str] = None,
+    params_filepath: Optional[str] = None,
 ):
     driver = get_driver(
         include_ext=False, headless=True, window_size=driver_window_size
@@ -74,7 +74,7 @@ def mirror(
         target=run_server,
         args=(
             driver,
-            data_filepath,
+            params_filepath,
         ),
     )
     server_thread.start()

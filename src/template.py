@@ -8,14 +8,15 @@ from selenium.webdriver.support import expected_conditions as EC  # noqa: F401
 from selenium.webdriver.support.ui import Select  # noqa: F401
 from selenium.webdriver.support.ui import WebDriverWait  # noqa: F401
 
-import utils.data as data  # noqa: F401
+import utils.params as params  # noqa: F401
 from utils.auth import google_login, login  # noqa: F401
 from utils.driver import get_driver
 
 
-def main(data_filepath: Optional[str] = None):
+def main(params_filepath: Optional[str] = None):
     driver = get_driver()  # noqa: F841
-    data.load(filepath=data_filepath)
+    if params_filepath:
+        params.load(filepath=params_filepath)
 
     # Update this with e.g. logins to sites you want your
     # agent to always have access to
@@ -23,11 +24,10 @@ def main(data_filepath: Optional[str] = None):
     # Ex. login(driver, "https://notion.so/")
 
     # Agent code here...
-    data.get("username")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--data", help="Specify the data file path", default=None)
     args = parser.parse_args()
-    main(data_filepath=args.data)
+    main(params_filepath=args.data)

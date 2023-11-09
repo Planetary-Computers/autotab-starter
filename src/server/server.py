@@ -14,8 +14,8 @@ class Session(BaseModel):
     shell: InteractiveShell
     cells: List[str] = []
     driver: Optional[AutotabChromeDriver] = None
-    data_filepath: Optional[str] = None
-    data: Optional[Dict[str, Any]] = None
+    params_filepath: Optional[str] = None
+    params: Optional[Dict[str, Any]] = None
 
     class Config:
         arbitrary_types_allowed = True
@@ -24,11 +24,11 @@ class Session(BaseModel):
         self.driver = driver
         self.shell.push({"driver": self.driver})
 
-    def setup_data(self, data_filepath: str):
-        self.data_filepath = data_filepath
-        if data_filepath is not None:
-            with open(data_filepath) as f:
-                self.data = json.load(f)
+    def setup_params(self, params_filepath: Optional[str] = None):
+        self.params_filepath = params_filepath
+        if params_filepath is not None:
+            with open(params_filepath) as f:
+                self.params = json.load(f)
 
     def start(self):
         header = """from selenium.webdriver.common.action_chains import ActionChains  # noqa: F401
@@ -38,11 +38,11 @@ from selenium.webdriver.support import expected_conditions as EC  # noqa: F401
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.ui import WebDriverWait  # noqa: F401
 
-import utils.data as data
+import utils.params as params
 
 """
-        if self.data_filepath:
-            header += f'data.load(filepath="{self.data_filepath}")\n'
+        if self.params_filepath:
+            header += f'params.load(filepath="{self.params_filepath}")\n'
         self.shell.run_cell(header)
 
     def reset(self):
@@ -88,14 +88,15 @@ def run_code_block(item: Code):
     return {"message": "Code executed successfully"}
 
 
-@app.get("/data")
-def get_data():
-    return session.data
+@app.get("/params")
+def get_params():
+    print(f"session params: {session.params}")
+    return session.params
 
 
-def run_server(driver: AutotabChromeDriver, data_filepath: str):
+def run_server(driver: AutotabChromeDriver, params_filepath: str):
     session.set_driver(driver)
-    session.setup_data(data_filepath)
+    session.setup_params(params_filepath)
     session.start()
     import uvicorn
 

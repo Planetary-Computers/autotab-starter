@@ -7,7 +7,7 @@ src/extension/autotab/
 src/extension/autotab/**
 src/extension/.autotab/
 src/extension/.autotab/**
-data.json
+params.json
 
 # Remove this if you want to track your agents with git
 agents/**
