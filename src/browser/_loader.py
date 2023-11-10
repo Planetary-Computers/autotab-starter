@@ -39,7 +39,7 @@ class OS(BaseModel):
     chromium_appname: str
     chromedriver_filename: str
     chromedriver_appname: Optional[str] = "chromedriver"
-    _latest_version: Optional[int] = PrivateAttr(None)
+    _latest_version: Optional[int] = PrivateAttr(1222532)
 
     @property
     def latest_version(self):
