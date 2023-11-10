@@ -111,8 +111,6 @@ def get_driver(
 
     print("Chromium filepath:", manager.chromium_filepath)
     print("Chromedriver filepath:", manager.chromedriver_filepath)
-    # if config.chrome_binary_location is not None:
-    #     options.binary_location = config.chrome_binary_location
     options.binary_location = manager.chromium_filepath
 
     driver = AutotabChromeDriver(
