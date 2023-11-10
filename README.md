@@ -6,14 +6,13 @@ Welcome to autotab! autotab makes it easy to create auditable browser automation
 
 ## Quickstart
 
-It usually takes 5-10 minutes to get everything set up (including gathering passwords and installing dependencies). You must have the Chrome browser installed, and we recommend setting up a Python virtual environment:
+It usually takes 5-10 minutes to get everything set up (including gathering passwords and installing dependencies). We recommend setting up a Python virtual environment:
 
 ```bash
 git clone https://github.com/Planetary-Computers/autotab-starter.git
 cd autotab-starter
 # Recommended: Setup a Python virtual environment
 make install
-brew install --cask chromedriver
 ```
 
 ### Configuration
@@ -30,7 +29,7 @@ Run `autotab record` to open a new browser window where you can start recording 
 
 ### Recording an automation
 
-To record a new automation, run `autotab record`. You can optionally add a `--agent <agent_name>` argument. This will launch a Chrome session controlled by Selenium and then log you in to Google and open the autotab extension in the sidepanel.
+To record a new automation, run `autotab record`. You can optionally add a `--agent <agent_name>` argument. This will launch a Chromium session controlled by Selenium and then log you in to Google and open the autotab extension in the sidepanel.
 
 If the sidepanel does not open, type `Command - Shift - Y` to open the sidepanel.
 
@@ -40,7 +39,7 @@ At the end of recording make sure to copy all the code. autotab will have create
 
 ### Running an automation
 
-To play an automation you've already created, run `autotab play --agent <agent_name>`. Leaving out `--agent <agent_name>` has it default to run `agents/agent.py`. This just runs the Python script, so you can set debug as you would any other Python script. Often times interactions fail if the Chrome window running the automation isn't focused. We are working on a headless version that runs in the cloud which we hope to release soon to address this.
+To play an automation you've already created, run `autotab play --agent <agent_name>`. Leaving out `--agent <agent_name>` has it default to run `agents/agent.py`. This just runs the Python script, so you can set debug as you would any other Python script. Often times interactions fail if the Chromium window running the automation isn't focused. We are working on a headless version that runs in the cloud which we hope to release soon to address this.
 
 ## Setup
 
