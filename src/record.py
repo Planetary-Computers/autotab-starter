@@ -5,6 +5,7 @@ from typing import Optional
 
 from screeninfo import get_monitors
 
+import browser
 from mirror.mirror import mirror
 from utils.config import config
 from utils.driver import get_driver
@@ -30,6 +31,8 @@ def record(
     if os.path.exists(f"agents/{agent_name}.py") and config.environment != "local":
         if not _is_blank_agent(agent_name=agent_name):
             raise Exception(f"Agent with name {agent_name} already exists")
+
+    browser.setup()
 
     view_width, _ = get_monitors()[0].width, get_monitors()[0].height
     window_w = 3 / 4

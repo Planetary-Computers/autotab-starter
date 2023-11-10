@@ -9,6 +9,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 
+import browser
 from extension import load_extension
 from utils.config import config
 
@@ -79,6 +80,7 @@ def get_driver(
     headless: bool = False,
     window_size: Optional[Tuple[int, int]] = None,
 ) -> AutotabChromeDriver:
+    manager = browser.get_manager()
     options = webdriver.ChromeOptions()
     options.add_argument("--no-sandbox")  # Necessary for running
     options.add_argument(
@@ -106,9 +108,16 @@ def get_driver(
     options.add_argument("--allow-running-insecure-content")
     options.add_argument("--disable-web-security")
     options.add_argument(f"--user-data-dir={mkdtemp()}")
-    options.binary_location = config.chrome_binary_location
 
-    driver = AutotabChromeDriver(options=options)
+    print("Chromium filepath:", manager.chromium_filepath)
+    print("Chromedriver filepath:", manager.chromedriver_filepath)
+    # if config.chrome_binary_location is not None:
+    #     options.binary_location = config.chrome_binary_location
+    options.binary_location = manager.chromium_filepath
+
+    driver = AutotabChromeDriver(
+        options=options, driver_executable_path=manager.chromedriver_filepath
+    )
 
     if window_size is not None:
         width, height = window_size
