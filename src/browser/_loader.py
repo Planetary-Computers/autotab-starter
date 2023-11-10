@@ -103,6 +103,7 @@ class OS(BaseModel):
         with zipfile.ZipFile(f"{LOCAL_CHROMIUM_DIR}/chromedriver.zip", "r") as zip_ref:
             zip_ref.extractall(f"{LOCAL_CHROMIUM_DIR}/")
         os.chmod(self.chromedriver_filepath, stat.S_IRWXU)
+        chmod_recursive(f"{LOCAL_CHROMIUM_DIR}/{self.chromedriver_filename}")
 
     def download(self):
         if os.path.exists(LOCAL_CHROMIUM_DIR):
