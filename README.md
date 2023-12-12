@@ -1,3 +1,11 @@
+## Update (Dec 12, 2023)
+
+Thanks for trying out autotab! Over the last few weeks we’ve learned from so many of you and are excited to start rolling out a smoother and more user-friendly autotab V1 (no dependencies!).
+
+As we transition, this repo will no longer be supported. The good news is that any Python code you’ve generated with autotab will of course work as usual. If you had Python code in the autotab app that you haven’t saved to a file or if you are interested in continuing to use autotab v0, please reach out to us (in Discord or email to jonas@autotab.com).
+
+Join our [Discord channel](https://discord.gg/seGGxSUgzM) to follow along and for a chance to be one of the first to try out new updates!
+
 # autotab
 
 Welcome to autotab! autotab makes it easy to create auditable browser automations using AI. Go from a point & click demonstration in the browser to live code for those actions in seconds.
