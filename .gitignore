@@ -7,6 +7,8 @@ src/extension/autotab/
 src/extension/autotab/**
 src/extension/.autotab/
 src/extension/.autotab/**
+src/browser/chromium/
+src/browser/chromium/**
 params.json
 
 # Remove this if you want to track your agents with git

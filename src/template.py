@@ -28,6 +28,6 @@ def main(params_filepath: Optional[str] = None):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--data", help="Specify the data file path", default=None)
+    parser.add_argument("--params", help="Specify the params file path", default=None)
     args = parser.parse_args()
-    main(params_filepath=args.data)
+    main(params_filepath=args.params)

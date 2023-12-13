@@ -38,7 +38,6 @@ class Config(BaseModel):
     autotab_api_key: Optional[str]
     credentials: Dict[str, SiteCredentials]
     google_credentials: GoogleCredentials
-    chrome_binary_location: str
     environment: str
     debug_mode: bool
 
@@ -60,10 +59,6 @@ class Config(BaseModel):
                 credentials: SiteCredentials = SiteCredentials(**creds)
                 google_credentials[credentials.name] = credentials
 
-            chrome_binary_location = config.get("chrome_binary_location")
-            if chrome_binary_location is None:
-                raise Exception("Must specify chrome_binary_location in config")
-
             autotab_api_key = config.get("autotab_api_key")
             if autotab_api_key == "...":
                 autotab_api_key = None
@@ -72,7 +67,6 @@ class Config(BaseModel):
                 autotab_api_key=autotab_api_key,
                 credentials=_credentials,
                 google_credentials=GoogleCredentials(credentials=google_credentials),
-                chrome_binary_location=config.get("chrome_binary_location"),
                 environment=config.get("environment", "prod"),
                 debug_mode=config.get("debug_mode", False),
             )

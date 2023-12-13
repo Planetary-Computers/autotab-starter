@@ -1,5 +1,3 @@
-chrome_binary_location: /Applications/Google Chrome.app/Contents/MacOS/Google Chrome
-
 autotab_api_key: ... # Go to https://autotab.com/dashboard to get your API key, or
 # run `autotab record` with this field blank and you will be prompted to log in to autotab
 

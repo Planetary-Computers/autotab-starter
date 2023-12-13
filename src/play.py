@@ -19,7 +19,7 @@ def play(agent_name: Optional[str] = None, params_filepath: Optional[str] = None
     else:
         agent_file = f"{agent_name}.py"
 
-    os.system(f"python agents/{agent_file} --data={params_filepath}")
+    os.system(f"python agents/{agent_file} --params={params_filepath}")
 
 
 if __name__ == "__main__":
